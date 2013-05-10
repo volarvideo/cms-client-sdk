@@ -8,6 +8,103 @@ class Volar(object):
 		self.secure = False
 		self.error = ''
 
+	"""
+	gets list of sites
+	@param dict params
+		recognized keys in params:
+			- optional -
+			'list'				type of list.  allowed values are 'all', 'archived', 'scheduled' or 'upcoming', 'upcoming_or_streaming', 'streaming' or 'live'
+			'page'				current page of listings.  pages begin at '1'
+			'per_page'			number of broadcasts to display per page
+			'section_id'		id of section you wish to limit list to
+			'playlist_id'		id of playlist you wish to limit list to
+			'id'				id of site - useful if you only want to get details of a single site
+			'slug'				slug of site.  useful for searches, as this accepts incomplete titles and returns all matches.
+			'title'				title of site.  useful for searches, as this accepts incomplete titles and returns all matches.
+			'sort_by'			data field to use to sort.  allowed fields are date, status, id, title, description
+			'sort_dir'			direction of sort.  allowed values are 'asc' (ascending) and 'desc' (descending)
+	@return false on failure, dict on success.  if failed, Volar.error can be used to get last error string
+	"""
+	def sites(self, params = {}):
+		return self.request(route = 'api/client/info', method = 'GET', params = params)
+
+	"""
+	gets list of broadcasts
+	@param dict params
+		recognized keys in params:
+			- required -
+			'site'				slug of site to filter to.
+			- optional -
+			'list'				type of list.  allowed values are 'all', 'archived', 'scheduled' or 'upcoming', 'upcoming_or_streaming', 'streaming' or 'live'
+			'page'				current page of listings.  pages begin at '1'
+			'per_page'			number of broadcasts to display per page
+			'section_id'		id of section you wish to limit list to
+			'playlist_id'		id of playlist you wish to limit list to
+			'id'				id of broadcast - useful if you only want to get details of a single broadcast
+			'title'				title of broadcast.  useful for searches, as this accepts incomplete titles and returns all matches.
+			'autoplay'			true or false.  defaults to false.  used in embed code to prevent player from immediately playing
+			'embed_width'		width (in pixels) that embed should be.  defaults to 640
+			'sort_by'			data field to use to sort.  allowed fields are date, status, id, title, description
+			'sort_dir'			direction of sort.  allowed values are 'asc' (ascending) and 'desc' (descending)
+	@return false on failure, dict on success.  if failed, Volar.error can be used to get last error string
+	"""
+	def broadcasts(self, params = {}):
+		if('site' not in params):
+			self.error = 'site is required';
+			return False;
+
+		return self.request(route = 'api/client/broadcast', params = params)
+
+	"""
+	gets list of sections
+	@param dict params
+		recognized keys in params:
+			- required -
+			'site'				slug of site to filter to.
+			- optional -
+			'page'				current page of listings.  pages begin at '1'
+			'per_page'			number of broadcasts to display per page
+			'broadcast_id'		id of broadcast you wish to limit list to.  will always return 1
+			'video_id'			id of video you wish to limit list to.  will always return 1.  note this is not fully supported yet.
+			'id'				id of section - useful if you only want to get details of a single section
+			'title'				title of section.  useful for searches, as this accepts incomplete titles and returns all matches.
+			'sort_by'			data field to use to sort.  allowed fields are id, title
+			'sort_dir'			direction of sort.  allowed values are 'asc' (ascending) and 'desc' (descending)
+	@return false on failure, dict on success.  if failed, Volar.error can be used to get last error string
+	"""
+	def sections(self, params = {}):
+		if('site' not in params):
+			self.error = 'site is required';
+			return False;
+
+		return self.request(route = 'api/client/section', params = params)
+
+	"""
+	gets list of playlists
+	@param dict params
+		recognized keys in params:
+			- required -
+			'site'				slug of site to filter to.
+			- optional -
+			'page'				current page of listings.  pages begin at '1'
+			'per_page'			number of broadcasts to display per page
+			'broadcast_id'		id of broadcast you wish to limit list to.
+			'video_id'			id of video you wish to limit list to.  note this is not fully supported yet.
+			'section_id'		id of section you wish to limit list to
+			'id'				id of playlist - useful if you only want to get details of a single playlist
+			'title'				title of playlist.  useful for searches, as this accepts incomplete titles and returns all matches.
+			'sort_by'			data field to use to sort.  allowed fields are id, title
+			'sort_dir'			direction of sort.  allowed values are 'asc' (ascending) and 'desc' (descending)
+	@return false on failure, dict on success.  if failed, Volar.error can be used to get last error string
+	"""
+	def playlists(self, params = {}):
+		if('site' not in params):
+			self.error = 'site is required';
+			return False;
+
+		return self.request(route = 'api/client/playlist', params = params)
+
+
 	def request(self, route, method = '', params = {}, post_body = None):
 		if method == '':
 			method = 'GET'
