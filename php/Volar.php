@@ -9,7 +9,7 @@ class Volar {
 
 	private $error = null;
 
-	public function __construct($api_key, $secret, $base_url = 'vcloud.volarvideo.com')
+	public function __construct($api_key = '', $secret = '', $base_url = 'vcloud.volarvideo.com')
 	{
 		$this->api_key = $api_key;
 		$this->secret = $secret;
@@ -22,12 +22,119 @@ class Volar {
 	}
 
 	/**
+	 *	gets list of sites
+	 *	@param array $params associative array
+	 *			recognized parameters in array:
+	 *				- optional -
+	 *				'list'				type of list.  allowed values are 'all', 'archived', 'scheduled' or 'upcoming', 'upcoming_or_streaming', 'streaming' or 'live'
+	 *				'page'				current page of listings.  pages begin at '1'
+	 *				'per_page'			number of broadcasts to display per page
+	 *				'section_id'		id of section you wish to limit list to
+	 *				'playlist_id'		id of playlist you wish to limit list to
+	 *				'id'				id of site - useful if you only want to get details of a single site
+	 *				'slug'				slug of site.  useful for searches, as this accepts incomplete titles and returns all matches.
+	 *				'title'				title of site.  useful for searches, as this accepts incomplete titles and returns all matches.
+	 *				'sort_by'			data field to use to sort.  allowed fields are date, status, id, title, description
+	 *				'sort_dir'			direction of sort.  allowed values are 'asc' (ascending) and 'desc' (descending)
+	 *	@return false on failure, array on success.  if failed, $volar->getError() can be used to get last error string
+	 */
+	public function sites($params = array())
+	{
+		return $this->request('api/client/info', 'GET', $params);
+	}
+
+	/**
+	 *	gets list of broadcasts
+	 *	@param array $params associative array
+	 *			recognized parameters in array:
+	 *				- required -
+	 *				'site'				slug of site to filter to.
+	 *				- optional -
+	 *				'list'				type of list.  allowed values are 'all', 'archived', 'scheduled' or 'upcoming', 'upcoming_or_streaming', 'streaming' or 'live'
+	 *				'page'				current page of listings.  pages begin at '1'
+	 *				'per_page'			number of broadcasts to display per page
+	 *				'section_id'		id of section you wish to limit list to
+	 *				'playlist_id'		id of playlist you wish to limit list to
+	 *				'id'				id of broadcast - useful if you only want to get details of a single broadcast
+	 *				'title'				title of broadcast.  useful for searches, as this accepts incomplete titles and returns all matches.
+	 *				'autoplay'			true or false.  defaults to false.  used in embed code to prevent player from immediately playing
+	 *				'embed_width'		width (in pixels) that embed should be.  defaults to 640
+	 *				'sort_by'			data field to use to sort.  allowed fields are date, status, id, title, description
+	 *				'sort_dir'			direction of sort.  allowed values are 'asc' (ascending) and 'desc' (descending)
+	 *	@return false on failure, array on success.  if failed, $volar->getError() can be used to get last error string
+	 */
+	public function broadcasts($params = array())
+	{
+		if(!isset($params['site']))
+		{
+			$this->error = 'site is required';
+			return false;
+		}
+		return $this->request('api/client/broadcast', 'GET', $params);
+	}
+
+	/**
+	 *	gets list of sections
+	 *	@param array $params associative array
+	 *			recognized parameters in array:
+	 *				- required -
+	 *				'site'				slug of site to filter to.
+	 *				- optional -
+	 *				'page'				current page of listings.  pages begin at '1'
+	 *				'per_page'			number of broadcasts to display per page
+	 *				'broadcast_id'		id of broadcast you wish to limit list to.  will always return 1
+	 *				'video_id'			id of video you wish to limit list to.  will always return 1.  note this is not fully supported yet.
+	 *				'id'				id of section - useful if you only want to get details of a single section
+	 *				'title'				title of section.  useful for searches, as this accepts incomplete titles and returns all matches.
+	 *				'sort_by'			data field to use to sort.  allowed fields are id, title
+	 *				'sort_dir'			direction of sort.  allowed values are 'asc' (ascending) and 'desc' (descending)
+	 *	@return false on failure, array on success.  if failed, $volar->getError() can be used to get last error string
+	 */
+	public function sections($params = array())
+	{
+		if(!isset($params['site']))
+		{
+			$this->error = 'site is required';
+			return false;
+		}
+		return $this->request('api/client/section', 'GET', $params);
+	}
+
+	/**
+	 *	gets list of playlists
+	 *	@param array $params associative array
+	 *			recognized parameters in array:
+	 *				- required -
+	 *				'site'				slug of site to filter to.
+	 *				- optional -
+	 *				'page'				current page of listings.  pages begin at '1'
+	 *				'per_page'			number of broadcasts to display per page
+	 *				'broadcast_id'		id of broadcast you wish to limit list to.
+	 *				'video_id'			id of video you wish to limit list to.  note this is not fully supported yet.
+	 *				'section_id'		id of section you wish to limit list to
+	 *				'id'				id of playlist - useful if you only want to get details of a single playlist
+	 *				'title'				title of playlist.  useful for searches, as this accepts incomplete titles and returns all matches.
+	 *				'sort_by'			data field to use to sort.  allowed fields are id, title
+	 *				'sort_dir'			direction of sort.  allowed values are 'asc' (ascending) and 'desc' (descending)
+	 *	@return false on failure, array on success.  if failed, $volar->getError() can be used to get last error string
+	 */
+	public function playlists($params = array())
+	{
+		if(!isset($params['site']))
+		{
+			$this->error = 'site is required';
+			return false;
+		}
+		return $this->request('api/client/playlist', 'GET', $params);
+	}
+
+	/**
 	 *	submits request to $base_url through $route
 	 *	@param string 	$route		api uri path (not including base_url!)
 	 *	@param string 	$type		type of request.  only GET and POST are supported.  if blank, GET is assumed
 	 *	@param array 	$params		associative array containing the GET parameters for the request
 	 *	@param mixed 	$post_body	either a string or an array for post requests.  only used if $type is POST.  if left null, an error will be returned
-	 *	@return boolean indicating success or failure.  if failed, $volar->getError() can be used to get last error string
+	 *	@return false on failure, array on success.  if failed, $volar->getError() can be used to get last error string
 	 */
 	public function request($route, $type = '', $params = array(), $post_body = null)
 	{
@@ -126,7 +233,7 @@ class Volar {
 		{
 			$error = curl_error($ch);
 			curl_close($ch);
-			$this->error = "cURL error: ".$error;
+			$this->error = "cURL error: ($url) ".$error;
 			return false;
 		}
 
