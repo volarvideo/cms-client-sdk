@@ -59,6 +59,9 @@ class Volar {
 	 *				'title'				title of broadcast.  useful for searches, as this accepts incomplete titles and returns all matches.
 	 *				'autoplay'			true or false.  defaults to false.  used in embed code to prevent player from immediately playing
 	 *				'embed_width'		width (in pixels) that embed should be.  defaults to 640
+	 *				'before' 			return broadcasts that occur before specified date.  can be a date string or integer timestamp.  note that date strings should be in standard formats.
+	 *				'after' 			return broadcasts that occur after specified date.  can be a date string or integer timestamp.  note that date strings should be in standard formats.
+	 *										note - if both before and after are included, broadcasts between the supplied dates are returned.
 	 *				'sort_by'			data field to use to sort.  allowed fields are date, status, id, title, description
 	 *				'sort_dir'			direction of sort.  allowed values are 'asc' (ascending) and 'desc' (descending)
 	 *	@return false on failure, array on success.  if failed, $volar->getError() can be used to get last error string
