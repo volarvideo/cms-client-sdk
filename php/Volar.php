@@ -26,15 +26,12 @@ class Volar {
 	 *	@param array $params associative array
 	 *			recognized parameters in array:
 	 *				- optional -
-	 *				'list'				type of list.  allowed values are 'all', 'archived', 'scheduled' or 'upcoming', 'upcoming_or_streaming', 'streaming' or 'live'
 	 *				'page'				current page of listings.  pages begin at '1'
 	 *				'per_page'			number of broadcasts to display per page
-	 *				'section_id'		id of section you wish to limit list to
-	 *				'playlist_id'		id of playlist you wish to limit list to
 	 *				'id'				id of site - useful if you only want to get details of a single site
 	 *				'slug'				slug of site.  useful for searches, as this accepts incomplete titles and returns all matches.
 	 *				'title'				title of site.  useful for searches, as this accepts incomplete titles and returns all matches.
-	 *				'sort_by'			data field to use to sort.  allowed fields are date, status, id, title, description
+	 *				'sort_by'			data field to use to sort.  allowed fields are status, id, title, description
 	 *				'sort_dir'			direction of sort.  allowed values are 'asc' (ascending) and 'desc' (descending)
 	 *	@return false on failure, array on success.  if failed, $volar->getError() can be used to get last error string
 	 */
@@ -74,6 +71,74 @@ class Volar {
 			return false;
 		}
 		return $this->request('api/client/broadcast', 'GET', $params);
+	}
+
+	public function broadcast_create($params = '')
+	{
+
+		if(is_array($params) && count($params) > 0)
+		{
+			$params = json_encode($params);
+		}
+		return $this->request('api/client/broadcast/create', 'POST', array(), $params);
+	}
+
+	public function broadcast_update($params = '')
+	{
+		if(is_array($params) && count($params) > 0)
+		{
+			$params = json_encode($params);
+		}
+		return $this->request('api/client/broadcast/update', 'POST', array(), $params);
+	}
+
+	public function broadcast_delete($params = '')
+	{
+		if(is_array($params) && count($params) > 0)
+		{
+			$params = json_encode($params);
+		}
+		return $this->request('api/client/broadcast/delete', 'POST', array(), $params);
+	}
+
+	public function broadcast_assign_playlist($params = array())
+	{
+		if(!isset($params['site']))
+		{
+			$this->error = 'site is required';
+			return false;
+		}
+		return $this->request('api/client/broadcast/assignplaylist', 'GET', $params);
+	}
+
+	public function broadcast_remove_playlist($params = array())
+	{
+		if(!isset($params['site']))
+		{
+			$this->error = 'site is required';
+			return false;
+		}
+		return $this->request('api/client/broadcast/removeplaylist', 'GET', $params);
+	}
+
+	public function broadcast_poster($params = array(), $image_data = '')
+	{
+		if(!isset($params['site']))
+		{
+			$this->error = 'site is required';
+			return false;
+		}
+		if(!isset($params['id']))
+		{
+			$this->error = 'id is required';
+			return false;
+		}
+		if(empty($image_data))
+		{
+			$this->error = 'missing image data';
+		}
+		$image_data = base64_encode($image_data);
+		return $this->request('api/client/broadcast/poster', 'POST', $params, $image_data);
 	}
 
 	/**
@@ -129,6 +194,16 @@ class Volar {
 			return false;
 		}
 		return $this->request('api/client/playlist', 'GET', $params);
+	}
+
+	public function timezones($params = array())
+	{
+		if(!isset($params['site']))
+		{
+			$this->error = 'site is required';
+			return false;
+		}
+		return $this->request('api/client/info/timezones', 'GET', $params);
 	}
 
 	/**

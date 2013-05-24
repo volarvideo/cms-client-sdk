@@ -26,7 +26,24 @@ if(isset($_POST['action']))
 
 	if($list_of)
 	{
-		$res = $v->{$list_of}($params);
+		switch($list_of)
+		{
+			case 'broadcast_create':
+			case 'broadcast_update':
+			case 'broadcast_delete':
+				$res = $v->{$list_of}($_POST['post_params']);
+			break;
+			case 'broadcast_poster':
+				if($_FILES['uploaded']['name'])
+				{
+					$params['file_name'] = $_FILES['uploaded']['name'];
+					$res = $v->broadcast_poster($params, file_get_contents($_FILES['uploaded']['tmp_name']));
+				}
+			break;
+			default:
+				$res = $v->{$list_of}($params);
+			break;
+		}
 	}
 	else
 		$res = $v->request($endpoint, 'GET', $params);
@@ -50,16 +67,21 @@ if(isset($_POST['action']))
 		</td>
 		<td valign="top" width="50%">
 
-<form method="POST" action="">
+<form method="POST" action="" enctype="multipart/form-data">
 	<input type="hidden" value="true" name="action" />
 	<select name="list_of">
 		<option value="">--</option>
 		<option<?php echo $list_of == 'sites' ? ' selected' : ''; ?> value="sites">Sites</option>
 		<option<?php echo $list_of == 'broadcasts' ? ' selected' : ''; ?> value="broadcasts">Broadcasts</option>
+		<option<?php echo $list_of == 'broadcast_create' ? ' selected' : ''; ?> value="broadcast_create">Create Broadcast</option>
+		<option<?php echo $list_of == 'broadcast_update' ? ' selected' : ''; ?> value="broadcast_update">Update Broadcast</option>
+		<option<?php echo $list_of == 'broadcast_delete' ? ' selected' : ''; ?> value="broadcast_delete">Delete Broadcast</option>
+		<option<?php echo $list_of == 'broadcast_poster' ? ' selected' : ''; ?> value="broadcast_poster">Upload Broadcast Poster</option>
 		<option<?php echo $list_of == 'sections' ? ' selected' : ''; ?> value="sections">Sections</option>
 		<option<?php echo $list_of == 'playlists' ? ' selected' : ''; ?> value="playlists">Playlists</option>
 	</select>
 	Endpoint:&nbsp;&nbsp;&nbsp;<input type="text" name="endpoint" value="<?php echo htmlspecialchars(stripslashes($endpoint)); ?>" style="width:300px;"><br /><br />
+	<textarea name="post_params" style="width:478px; height:147px;"><?php echo isset($_POST['post_params']) ? htmlspecialchars(stripslashes($_POST['post_params'])) : ''; ?></textarea>
 	<table width="500">
 		<tr>
 			<th>key</th>
@@ -79,6 +101,7 @@ if(isset($_POST['action']))
 		}
 		?>
 	</table>
+	File upload: <input type="file" name="uploaded" /><br /><br />
 	<input type="submit" value="submit" />
 </form>
 		</td>
