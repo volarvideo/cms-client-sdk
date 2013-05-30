@@ -141,6 +141,19 @@ class Volar {
 		return $this->request('api/client/broadcast/poster', 'POST', $params, $image_data);
 	}
 
+	public function broadcast_archive($params = array(), $file_path = '')
+	{
+		if(empty($file_path))
+		{
+			return $this->request('api/client/broadcast/archive', 'GET', $params);
+		}
+		else
+		{
+			$post = array('archive' => '@'.ltrim($file_path,'@'));
+			return $this->request('api/client/broadcast/archive', 'POST', $params, $post);
+		}
+	}
+
 	/**
 	 *	gets list of sections
 	 *	@param array $params associative array
@@ -282,15 +295,15 @@ class Volar {
 		{
 			curl_setopt($ch, CURLOPT_HTTPHEADER, $content_type);
 		}
-		if(is_array($post_body))
-		{
-			$post_fields = array();
-			foreach($post_body as $key => $value)
-			{
-				$post_fields[] = $key.'='.urlencode($value);
-			}
-			$post_body = implode('&', $post_fields);
-		}
+		// if(is_array($post_body))
+		// {
+		// 	$post_fields = array();
+		// 	foreach($post_body as $key => $value)
+		// 	{
+		// 		$post_fields[] = $key.'='.urlencode($value);
+		// 	}
+		// 	$post_body = implode('&', $post_fields);
+		// }
 		if(!empty($post_body) && $type == 'POST')
 		{
 			curl_setopt($ch, CURLOPT_POSTFIELDS, $post_body);

@@ -33,7 +33,13 @@ if(isset($_POST['action']))
 			case 'broadcast_delete':
 				$res = $v->{$list_of}($_POST['post_params']);
 			break;
-			case 'broadcast_poster':
+			case 'broadcast_archive':
+				if($_FILES['uploaded']['name'])
+				{
+					$res = $v->broadcast_archive($params, $_FILES['uploaded']['tmp_name']);
+				}
+			break;
+			case 'broadcast_poster':			
 				if($_FILES['uploaded']['name'])
 				{
 					$params['file_name'] = $_FILES['uploaded']['name'];
@@ -77,6 +83,7 @@ if(isset($_POST['action']))
 		<option<?php echo $list_of == 'broadcast_update' ? ' selected' : ''; ?> value="broadcast_update">Update Broadcast</option>
 		<option<?php echo $list_of == 'broadcast_delete' ? ' selected' : ''; ?> value="broadcast_delete">Delete Broadcast</option>
 		<option<?php echo $list_of == 'broadcast_poster' ? ' selected' : ''; ?> value="broadcast_poster">Upload Broadcast Poster</option>
+		<option<?php echo $list_of == 'broadcast_archive' ? ' selected' : ''; ?> value="broadcast_archive">Archive Broadcast</option>
 		<option<?php echo $list_of == 'sections' ? ' selected' : ''; ?> value="sections">Sections</option>
 		<option<?php echo $list_of == 'playlists' ? ' selected' : ''; ?> value="playlists">Playlists</option>
 	</select>
