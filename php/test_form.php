@@ -36,7 +36,7 @@ if(isset($_POST['action']))
 			case 'broadcast_archive':
 				if($_FILES['uploaded']['name'])
 				{
-					$res = $v->broadcast_archive($params, $_FILES['uploaded']['tmp_name']);
+					$res = $v->broadcast_archive($params, $_FILES['uploaded']['tmp_name'], $_FILES['uploaded']['name']);
 				}
 			break;
 			case 'broadcast_poster':			

@@ -73,23 +73,23 @@ class Volar {
 		return $this->request('api/client/broadcast', 'GET', $params);
 	}
 
-	public function broadcast_create($params = '')
+	public function broadcast_create($site, $params = '')
 	{
 
 		if(is_array($params) && count($params) > 0)
 		{
 			$params = json_encode($params);
 		}
-		return $this->request('api/client/broadcast/create', 'POST', array(), $params);
+		return $this->request('api/client/broadcast/create', 'POST', array('site' => $site), $params);
 	}
 
-	public function broadcast_update($params = '')
+	public function broadcast_update($site, $params = '')
 	{
 		if(is_array($params) && count($params) > 0)
 		{
 			$params = json_encode($params);
 		}
-		return $this->request('api/client/broadcast/update', 'POST', array(), $params);
+		return $this->request('api/client/broadcast/update', 'POST', array('site' => $site), $params);
 	}
 
 	public function broadcast_delete($params = '')
@@ -141,7 +141,7 @@ class Volar {
 		return $this->request('api/client/broadcast/poster', 'POST', $params, $image_data);
 	}
 
-	public function broadcast_archive($params = array(), $file_path = '')
+	public function broadcast_archive($params = array(), $file_path = '', $filename = '')
 	{
 		if(empty($file_path))
 		{
@@ -150,6 +150,11 @@ class Volar {
 		else
 		{
 			$post = array('archive' => '@'.ltrim($file_path,'@'));
+			if($filename)
+			{
+				$filename = str_replace(array(';','"'), '', $filename);
+				$post['archive'] .= ';filename='.$filename;
+			}
 			return $this->request('api/client/broadcast/archive', 'POST', $params, $post);
 		}
 	}
