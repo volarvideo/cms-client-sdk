@@ -1,5 +1,6 @@
+require 'rubygems'
+require 'rest-client'
 require 'base64'
-require 'cgi'
 require 'digest/sha2'
 require 'json'
 
@@ -29,12 +30,13 @@ class Volar
 		route.chomp!('/').reverse!.chomp!('/').reverse!	#i'm sure there's a not stupid way to do this.  if there isn't, then i am glad i'm not primarily a ruby programmer
 		
 		stringToSign = @secret_key.to_s + type.to_s + route.to_s + (get_params.map { |param| param.join('=') }.join);
-		if post_body != nil
-			stringToSign += post_body.to_s
+		if post_body != nil and post_body.kind_of?(String)
+			stringToSign += post_body
 		end
 
 		signature = Base64::encode64(Digest::SHA256.digest(stringToSign))[0..42]
-		CGI.escape(signature)
+		signature.chomp!('=')
+		signature
 
 		# if(!is_array($post_body))
 		# 	$stringToSign .= $post_body;

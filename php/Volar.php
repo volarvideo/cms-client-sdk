@@ -65,31 +65,25 @@ class Volar {
 	 */
 	public function broadcasts($params = array())
 	{
-		if(!isset($params['site']))
-		{
-			$this->error = 'site is required';
-			return false;
-		}
 		return $this->request('api/client/broadcast', 'GET', $params);
 	}
 
-	public function broadcast_create($site, $params = '')
+	public function broadcast_create($params = '')
 	{
-
 		if(is_array($params) && count($params) > 0)
 		{
 			$params = json_encode($params);
 		}
-		return $this->request('api/client/broadcast/create', 'POST', array('site' => $site), $params);
+		return $this->request('api/client/broadcast/create', 'POST', array(), $params);
 	}
 
-	public function broadcast_update($site, $params = '')
+	public function broadcast_update($params = '')
 	{
 		if(is_array($params) && count($params) > 0)
 		{
 			$params = json_encode($params);
 		}
-		return $this->request('api/client/broadcast/update', 'POST', array('site' => $site), $params);
+		return $this->request('api/client/broadcast/update', 'POST', array(), $params);
 	}
 
 	public function broadcast_delete($params = '')
@@ -103,31 +97,16 @@ class Volar {
 
 	public function broadcast_assign_playlist($params = array())
 	{
-		if(!isset($params['site']))
-		{
-			$this->error = 'site is required';
-			return false;
-		}
 		return $this->request('api/client/broadcast/assignplaylist', 'GET', $params);
 	}
 
 	public function broadcast_remove_playlist($params = array())
 	{
-		if(!isset($params['site']))
-		{
-			$this->error = 'site is required';
-			return false;
-		}
 		return $this->request('api/client/broadcast/removeplaylist', 'GET', $params);
 	}
 
-	public function broadcast_poster($params = array(), $image_data = '')
+	public function broadcast_poster($params = array(), $image_path = '', $image_name = '')
 	{
-		if(!isset($params['site']))
-		{
-			$this->error = 'site is required';
-			return false;
-		}
 		if(!isset($params['id']))
 		{
 			$this->error = 'id is required';
@@ -137,8 +116,13 @@ class Volar {
 		{
 			$this->error = 'missing image data';
 		}
-		$image_data = base64_encode($image_data);
-		return $this->request('api/client/broadcast/poster', 'POST', $params, $image_data);
+		$post = array('api_poster' => '@'.ltrim($image_path,'@'));
+		if($image_name)
+		{
+			$image_name = str_replace(array(';','"'), '', $image_name);
+			$post['api_poster'] .= ';filename='.$image_name;
+		}
+		return $this->request('api/client/broadcast/poster', 'POST', $params, $post);
 	}
 
 	public function broadcast_archive($params = array(), $file_path = '', $filename = '')
@@ -206,24 +190,70 @@ class Volar {
 	 */
 	public function playlists($params = array())
 	{
-		if(!isset($params['site']))
-		{
-			$this->error = 'site is required';
-			return false;
-		}
 		return $this->request('api/client/playlist', 'GET', $params);
 	}
 
+	public function playlist_create($params = '')
+	{
+		if(is_array($params) && count($params) > 0)
+		{
+			$params = json_encode($params);
+		}
+		return $this->request('api/client/playlist/create', 'POST', array(), $params);
+	}
+
+	public function playlist_update($params = '')
+	{
+		if(is_array($params) && count($params) > 0)
+		{
+			$params = json_encode($params);
+		}
+		return $this->request('api/client/playlist/update', 'POST', array(), $params);
+	}
+
+	public function playlist_delete($params = '')
+	{
+		if(is_array($params) && count($params) > 0)
+		{
+			$params = json_encode($params);
+		}
+		return $this->request('api/client/playlist/delete', 'POST', array(), $params);
+	}
+
 	public function timezones($params = array())
+	{
+		return $this->request('api/client/info/timezones', 'GET', $params);
+	}
+
+	/**
+	 *	gets list of videos
+	 *	@param array $params associative array
+	 *			recognized parameters in array:
+	 *				- required -
+	 *				'site'				slug of site to filter to.
+	 *				- optional -
+	 *				'available'			filter based on whether the video is active or inactive.  allowed values are: 'yes', 'active', or 'available' (to get active videos - this is default behavior), 'no', 'inactive', or 'unavailable' (to get all inactive videos), and finally 'all' (to not filter on whether or not the video is set active or inactive)
+	 *				'page'				current page of listings.  pages begin at '1'
+	 *				'per_page'			number of videos to display per page
+	 *				'section_id'		id of section you wish to limit list to
+	 *				'playlist_id'		id of playlist you wish to limit list to
+	 *				'id'				id of broadcast - useful if you only want to get details of a single broadcast
+	 *				'title'				title of broadcast.  useful for searches, as this accepts incomplete titles and returns all matches.
+	 *				'autoplay'			true or false.  defaults to false.  used in embed code to prevent player from immediately playing
+	 *				'embed_width'		width (in pixels) that embed should be.  defaults to 640
+	 *				'sort_by'			data field to use to sort.  allowed fields are status, id, title, description, and playlist (only when playlist_id is supplied)
+	 *				'sort_dir'			direction of sort.  allowed values are 'asc' (ascending) and 'desc' (descending)
+	 *	@return false on failure, array on success.  if failed, $volar->getError() can be used to get last error string
+	 */
+	public function videos($params = array())
 	{
 		if(!isset($params['site']))
 		{
 			$this->error = 'site is required';
 			return false;
 		}
-		return $this->request('api/client/info/timezones', 'GET', $params);
+		return $this->request('api/client/video', 'GET', $params);
 	}
-
 	/**
 	 *	submits request to $base_url through $route
 	 *	@param string 	$route		api uri path (not including base_url!)

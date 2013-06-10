@@ -205,9 +205,36 @@ class Volar(object):
 			return False
 		return self.request(route = 'api/client/broadcast/removeplaylist', params = params)
 
-	def broadcast_poster(self, params = {}, image_data = ''):
-		self.error  = 'todo'
-		return False
+	def broadcast_poster(self, params = {}, file_path = '', filename = ''):
+		"""
+		archives a broadcast.
+
+		@params
+			dict params
+				'id' : id of broadcast
+			string file_path
+				if supplied, this file is uploaded to the server and attached
+				to the broadcast as an image
+			string filename
+				if supplied & file_path is also given, the uploaded file's
+				name is reported to Volar as this filename.  used for easing
+				file upload passthrus.  if not supplied, the filename from
+				file_path is used.
+		@return dict
+			{
+				'success' : True or False depending on success
+				if 'success' == False:
+					'errors' : list of errors to give reason(s) for failure
+			}
+		"""
+		if file_path == '':
+			return self.request(route = 'api/client/broadcast/poster', method = 'GET', params = params)
+		else:
+			if filename != '':
+				post = {'files' : { 'api_poster': (filename, open(file_path, 'rb'))}}
+			else:
+				post = {'files' : { 'api_poster': open(file_path, 'rb')}}
+			return self.request(route = 'api/client/broadcast/poster', method = 'POST', params = params, post_body = post)
 
 	def broadcast_archive(self, params = {}, file_path = '', filename = ''):
 		"""
@@ -306,6 +333,91 @@ class Volar(object):
 			return False
 
 		return self.request(route = 'api/client/playlist', params = params)
+
+
+	def playlist_create(self, params = {}):
+		"""
+		create a new playlist
+
+		@param dict params
+			- required -
+			'title' : title of the new playlist
+			- optional -
+			'description' : HTML formatted description of the playlist.
+			'available' : flag whether or not the playlist is available
+				for public viewing.  accepts 'yes','available','active',
+				& '1' (to flag availability) and 'no','unavailable',
+				'inactive', & '0' (to flag non-availability)
+			'section_id' : id of the section that this playlist should
+				be assigned.  the Volar.sections() call can give you a
+				list of available sections.  Defaults to a 'General' section
+		@return dict
+			{
+				'success' : True or False depending on success
+				...
+				if 'success' == True:
+					'playlist' : dict containing playlist information,
+						including id of new playlist
+				else:
+					'errors' : list of errors to give reason(s) for failure
+			}
+		"""
+		site = params.pop('site', None)
+		if site == None:
+			self.error = 'site is required'
+			return False
+
+		params = json.dumps(params)
+		return self.request(route = 'api/client/playlist/create', method = 'POST', params = { 'site' : site }, post_body = params)
+
+	def playlist_update(self, params = {}):
+		"""
+		update existing playlist
+
+		@param dict params
+			- required -
+			'id' : id of playlist you wish to update
+			- optional -
+			'title' : title of the new playlist.  if supplied, CANNOT be
+				blank
+			'description' : HTML formatted description of the playlist.
+			'available' : flag whether or not the playlist is available
+				for public viewing.  accepts 'yes','available','active',
+				& '1' (to flag availability) and 'no','unavailable',
+				'inactive', & '0' (to flag non-availability)
+			'section_id' : id of the section that this playlist should
+				be assigned.  the Volar.sections() call can give you a
+				list of available sections.  Defaults to a 'General' section
+		@return dict
+			{
+				'success' : True or False depending on success
+				if 'success' == True:
+					'playlist' : dict containing playlist information,
+						including id of new playlist
+				else:
+					'errors' : list of errors to give reason(s) for failure
+			}
+		"""
+		site = params.pop('site', None)
+		if site == None:
+			self.error = 'site is required'
+			return False
+
+		params = json.dumps(params)
+		return self.request(route = 'api/client/playlist/update', method = 'POST', params = { 'site' : site }, post_body = params)
+
+	def playlist_delete(self, params = {}):
+		"""
+		delete a playlist
+
+		the only parameter (aside from 'site') that this function takes is 'id'
+		"""
+		site = params.pop('site', None)
+		if site == None:
+			self.error = 'site is required'
+			return False
+		params = json.dumps(params)
+		return self.request(route = 'api/client/playlist/delete', method = 'POST', params = { 'site' : site }, post_body = params)
 
 
 	def request(self, route, method = '', params = {}, post_body = None):

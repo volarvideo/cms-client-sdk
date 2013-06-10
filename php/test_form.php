@@ -1,6 +1,7 @@
 <?php
 include('Volar.php');
 $v = new Volar('934bf28ae6c5575b3bb6e3e94da47cde', 'JVJys$vZ-d8im2E:zLRO5UzWXd.A#V$i', 'local.platypus.com');
+// $v = new Volar('onOpocZVm8u0fTRwFZWXQcd2dQfBO1hz', 'xzF,t;idHVeF^#M0:B4L-kcz5C,R<?@A', 'local.platypus.com');
 // $v = new Volar('8yBOLdFqu4tjyjY6Wjd2mwyjNIuC6jkW', 'w}EzJJVC:SwJ_!zd%U:[IY<cCQh.|TRf', 'staging.platypusgranola.com');
 // $v = new Volar('eF3LHoviIC5K2q7LLRQI38APNiOfzqHV', 'qAd0XA-$O-|do}UJREeiz&)&ZpVzG5w(', 'vcloud.volarvideo.com');
 
@@ -31,19 +32,16 @@ if(isset($_POST['action']))
 			case 'broadcast_create':
 			case 'broadcast_update':
 			case 'broadcast_delete':
+			case 'playlist_create':
+			case 'playlist_update':
+			case 'playlist_delete':
 				$res = $v->{$list_of}($_POST['post_params']);
 			break;
 			case 'broadcast_archive':
-				if($_FILES['uploaded']['name'])
-				{
-					$res = $v->broadcast_archive($params, $_FILES['uploaded']['tmp_name'], $_FILES['uploaded']['name']);
-				}
-			break;
 			case 'broadcast_poster':			
 				if($_FILES['uploaded']['name'])
 				{
-					$params['file_name'] = $_FILES['uploaded']['name'];
-					$res = $v->broadcast_poster($params, file_get_contents($_FILES['uploaded']['tmp_name']));
+					$res = $v->{$list_of}($params, $_FILES['uploaded']['tmp_name'], $_FILES['uploaded']['name']);
 				}
 			break;
 			default:
@@ -78,14 +76,22 @@ if(isset($_POST['action']))
 	<select name="list_of">
 		<option value="">--</option>
 		<option<?php echo $list_of == 'sites' ? ' selected' : ''; ?> value="sites">Sites</option>
-		<option<?php echo $list_of == 'broadcasts' ? ' selected' : ''; ?> value="broadcasts">Broadcasts</option>
-		<option<?php echo $list_of == 'broadcast_create' ? ' selected' : ''; ?> value="broadcast_create">Create Broadcast</option>
-		<option<?php echo $list_of == 'broadcast_update' ? ' selected' : ''; ?> value="broadcast_update">Update Broadcast</option>
-		<option<?php echo $list_of == 'broadcast_delete' ? ' selected' : ''; ?> value="broadcast_delete">Delete Broadcast</option>
-		<option<?php echo $list_of == 'broadcast_poster' ? ' selected' : ''; ?> value="broadcast_poster">Upload Broadcast Poster</option>
-		<option<?php echo $list_of == 'broadcast_archive' ? ' selected' : ''; ?> value="broadcast_archive">Archive Broadcast</option>
+		<optgroup label="Broadcasts">
+			<option<?php echo $list_of == 'broadcasts' ? ' selected' : ''; ?> value="broadcasts">List of Broadcasts</option>
+			<option<?php echo $list_of == 'broadcast_create' ? ' selected' : ''; ?> value="broadcast_create">  Create Broadcast</option>
+			<option<?php echo $list_of == 'broadcast_update' ? ' selected' : ''; ?> value="broadcast_update">  Update Broadcast</option>
+			<option<?php echo $list_of == 'broadcast_delete' ? ' selected' : ''; ?> value="broadcast_delete">  Delete Broadcast</option>
+			<option<?php echo $list_of == 'broadcast_poster' ? ' selected' : ''; ?> value="broadcast_poster">  Upload Broadcast Poster</option>
+			<option<?php echo $list_of == 'broadcast_archive' ? ' selected' : ''; ?> value="broadcast_archive">  Archive Broadcast</option>
+		</optgroup>
+		<option<?php echo $list_of == 'videos' ? ' selected' : ''; ?> value="videos">Videos</option>
 		<option<?php echo $list_of == 'sections' ? ' selected' : ''; ?> value="sections">Sections</option>
-		<option<?php echo $list_of == 'playlists' ? ' selected' : ''; ?> value="playlists">Playlists</option>
+		<optgroup label="Playlists">
+			<option<?php echo $list_of == 'playlists' ? ' selected' : ''; ?> value="playlists">List of Playlists</option>
+			<option<?php echo $list_of == 'playlist_create' ? ' selected' : ''; ?> value="playlist_create">Create Playlist</option>
+			<option<?php echo $list_of == 'playlist_update' ? ' selected' : ''; ?> value="playlist_update">Update Playlist</option>
+			<option<?php echo $list_of == 'playlist_delete' ? ' selected' : ''; ?> value="playlist_delete">Delete Playlist</option>
+		</option>
 	</select>
 	Endpoint:&nbsp;&nbsp;&nbsp;<input type="text" name="endpoint" value="<?php echo htmlspecialchars(stripslashes($endpoint)); ?>" style="width:300px;"><br /><br />
 	<textarea name="post_params" style="width:478px; height:147px;"><?php echo isset($_POST['post_params']) ? htmlspecialchars(stripslashes($_POST['post_params'])) : ''; ?></textarea>
