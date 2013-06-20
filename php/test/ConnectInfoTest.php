@@ -1,9 +1,10 @@
 <?php
 require('../Volar.php');
+require('../test_config.php');
 class ConnectInfoTest extends PHPUnit_Framework_TestCase {
-	var $server = 'staging.platypusgranola.com';
-	var $api_key = '8yBOLdFqu4tjyjY6Wjd2mwyjNIuC6jkW';
-	var $secret_key = 'w}EzJJVC:SwJ_!zd%U:[IY<cCQh.|TRf';
+	var $server = VOLAR_BASE_URL;
+	var $api_key = VOLAR_API_KEY;
+	var $secret_key = VOLAR_SECRET_KEY;
 
 	function testConnectSuccess()
 	{

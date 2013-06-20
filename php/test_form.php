@@ -1,9 +1,8 @@
 <?php
 include('Volar.php');
-$v = new Volar('934bf28ae6c5575b3bb6e3e94da47cde', 'JVJys$vZ-d8im2E:zLRO5UzWXd.A#V$i', 'local.platypus.com');
-// $v = new Volar('onOpocZVm8u0fTRwFZWXQcd2dQfBO1hz', 'xzF,t;idHVeF^#M0:B4L-kcz5C,R<?@A', 'local.platypus.com');
-// $v = new Volar('8yBOLdFqu4tjyjY6Wjd2mwyjNIuC6jkW', 'w}EzJJVC:SwJ_!zd%U:[IY<cCQh.|TRf', 'staging.platypusgranola.com');
-// $v = new Volar('eF3LHoviIC5K2q7LLRQI38APNiOfzqHV', 'qAd0XA-$O-|do}UJREeiz&)&ZpVzG5w(', 'vcloud.volarvideo.com');
+include('test_config.php');
+
+$v = new Volar(VOLAR_API_KEY, VOLAR_SECRET_KEY, VOLAR_BASE_URL);
 
 $endpoint = isset($_POST['endpoint']) ? $_POST['endpoint'] : 'api/client/broadcast';
 $list_of = isset($_POST['list_of']) ? $_POST['list_of'] : '';

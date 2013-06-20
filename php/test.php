@@ -1,11 +1,10 @@
 <?php
 include('Volar.php');
+include('test_config.php');
 
 header('Content-Type: text/plain');
 
-
-//$v = new Volar('934bf28ae6c5575b3bb6e3e94da47cde', 'JVJys$vZ-d8im2E:zLRO5UzWXd.A#V$i', 'local.platypus.com');
-$v = new Volar('eaZjI371TFPdFj2XmZMB7wYDxlVzwX1w', '}*wqFSun%&6l1%n457\mHh^PKCBI*V?3', 'master.platypusgranola.com');
+$v = new Volar(VOLAR_API_KEY, VOLAR_SECRET_KEY, VOLAR_BASE_URL);
 
 echo $v->buildSignature('api/client/info')."\n";
 if(!$res = $v->request('api/client/info'))
