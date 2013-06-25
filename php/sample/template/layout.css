@@ -1,0 +1,28 @@
+/*
+	contains style for elements that are only meant for layout purposes.  the site will still look ok without these styles
+*/
+
+body {
+	margin: 0;
+	padding: 0;
+	font-family: Arial, Helvetica, "Sans Serif";
+	font-size: 1em;
+}
+
+#broadcast-nav { width: 700px; margin: 0 auto; }
+	#broadcast-nav div { width: 33.3333333%; float: left; }
+		#broadcast-nav div a { display: block; padding: 5px; text-align: center; border: 2px solid #007; }
+		#broadcast-nav div.broadcast-current-list a { background: #007; color: #fff; }
+
+#main-container {
+	width: 700px;
+	margin: 0 auto;
+}
+
+a, a:visited, a:hover {
+	color: #007;
+	text-decoration: none;
+}
+a:hover {
+	color: #07A;
+}

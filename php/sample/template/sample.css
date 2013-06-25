@@ -1,0 +1,42 @@
+/*********************************/
+/*   Styles for broadcast list   */
+/*********************************/
+.broadcast-pages { padding: 3px; }
+	.broadcast-pages ul { padding: 3px; margin: 0; list-style: none; }
+		.broadcast-pages li { float: left; padding: 3px; }
+			.broadcast-pages li a, .broadcast-pages li span { display: block; padding: 3px; }
+			.broadcast-pages li a.broadcast-current-page { background-color: #007; color: #fff; }
+
+.broadcast-list {
+	border: 1px dotted #ccc;
+	padding: 5px;
+}
+	.broadcast-list .broadcast { clear: both; }
+	.broadcast-list .broadcast .broadcast-image {
+		width: 200px;
+		padding: 3px;
+		float: left;
+	}
+		.broadcast-list .broadcast .broadcast-image img {
+			max-width: 200px;
+			border: 0;
+		}
+
+	.broadcast-list .broadcast .broadcast-info {
+		width:476px;
+		padding: 3px;
+		float: left;
+	}
+	.broadcast-list .broadcast .broadcast-info h2.broadcast-title { font-size: 1.2em; margin: 0; padding: 0; }
+	.broadcast-list .broadcast .broadcast-info h2.broadcast-title a { color: #336; }
+	.broadcast-list .broadcast .broadcast-info em.broadcast-date { font-size: 0.8em; }
+	.broadcast-list .broadcast .broadcast-info em.broadcast-date a { color: #888; }
+	.broadcast-list .broadcast .broadcast-info p.broadcast-description { font-size: 0.9em; }
+	.broadcast-list .broadcast .broadcast-info p.broadcast-description a { color: #555; }
+
+/**********************************/
+/*   Styles for broadcast watch   */
+/**********************************/
+#broadcast { }
+	#broadcast h1.broadcast-title { font-size: 1.5em; margin: 0; padding: 5px 0 10px; }
+	#broadcast em.broadcast-date { font-size: 0.8em; color: #888; }

@@ -1,5 +1,5 @@
 <?php
 define('VOLAR_BASE_URL', 'local.platypus.com');
-define('VOLAR_API_KEY', '934bf28ae6c5575b3bb6e3e94da47cde');
-define('VOLAR_SECRET_KEY', 'JVJys$vZ-d8im2E:zLRO5UzWXd.A#V$i');
+define('VOLAR_API_KEY', 'BXwwWHExORQWRN6nPj9jTzeR5QQB4F26');
+define('VOLAR_SECRET_KEY', 'TDsy[]EC<6)OtL^_Za%9Qxq\NA>RZ1C5');
 ?>
