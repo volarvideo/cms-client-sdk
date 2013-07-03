@@ -98,6 +98,29 @@ class EditBroadcastTest extends PHPUnit_Framework_TestCase {
 		}
 	}
 
+	function testBroadcastArchive()
+	{
+		$v = new Volar($this->api_key, $this->secret_key, $this->server);
+
+		$params = array("site" => "volar", "title" => "api_test");
+		$result = $v->broadcast_create($params);
+		$this->assertTrue($result["success"]);
+
+		$broadcast_details = $result["broadcast"];
+
+		$update_params = array("site" => "volar", "id" => $broadcast_details["id"]);
+		$result = $v->broadcast_update($update_params);
+		$this->assertTrue($result["success"], "Archival Failed");
+
+		if($DELETE_BROADCASTS)
+		{
+			$params["id"] = $broadcast_details["id"];
+			$params["site"] = "volar";
+			$result = $v->broadcast_delete($params);
+			$this->assertTrue($result["success"], "Broadcast Deletion Failed");
+		}
+	}
+
 	function testPlaylistAssignment()
 	{
 		$v = new Volar($this->api_key, $this->secret_key, $this->server);
