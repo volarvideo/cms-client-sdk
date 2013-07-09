@@ -19,9 +19,9 @@ class BasicPlaylistTest extends PHPUnit_Framework_TestCase {
 	{
 
 		//generates arguments based on an array of integers passed by the test. 
-		//Negative numbers are invalid data, Positive numbers are expected to work.
+		//1s numbers are invalid data, 2s are expected to work.
 		//Zero means that the argument will not be passed
-		function paramMux($seed)
+		function paramDemux($seed)
 		{
 			//Expected indicates whether or not the request is expected to succeed
 			//Empty indicates that no sites are expected to be returned
@@ -163,7 +163,7 @@ class BasicPlaylistTest extends PHPUnit_Framework_TestCase {
 		for($i = 0; $i <= 2; $i++)
 		for($j = 0; $j <= 2; $j++){
 			$param_seed = array($a, $b, $c, $d, $e, $f, $g, $h, $i, $j);
-			$test_case = paramMux($param_seed);
+			$test_case = paramDemux($param_seed);
 			if($test_case["expected"])
 			{
 

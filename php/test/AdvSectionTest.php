@@ -60,29 +60,29 @@ class AdvSectionTest extends PHPUnit_Framework_TestCase {
 
 	function testDataCorrectness()
 	{
-                $v = new Volar($this->api_key, $this->secret_key, $this->server);
+        $v = new Volar($this->api_key, $this->secret_key, $this->server);
 
 		$result = $v->sections(array("site" => "volar", "id" => 1);
 		$this->assertLessThanOrEqual(1, count($result["sections"]), "More than 1 section found with 1 id");
 
 		$result = $v->sections(array("site" => "volar", "sort_by" => "id", "sort_dir" => "ASC"));
-                $this->assertGreaterThanOrEqual($result["sections"][0]["id"], $result["sections"][1]["id"],
-                        "Broadcasts returned out of order: id ASC");
+        $this->assertGreaterThanOrEqual($result["sections"][0]["id"], $result["sections"][1]["id"],
+            "Sections returned out of order: id ASC");
 
-                $result = $v->sections(array("site" => "volar", "sort_by" => "id", "sort_dir" => "DESC"));
-                $this->assertLessThanOrEqual($result["sections"][0]["id"], $result["sections"][1]["id"], 
-                        "Broadcasts returned out of order: id DESC");
+        $result = $v->sections(array("site" => "volar", "sort_by" => "id", "sort_dir" => "DESC"));
+        $this->assertLessThanOrEqual($result["sections"][0]["id"], $result["sections"][1]["id"], 
+            "Sections returned out of order: id DESC");
 
 
                 
-                $result = $v->sections(array("site" => "volar", "sort_by" => "title", "sort_dir" => "ASC"));
-                $this->assertGreaterThanOrEqual(strtolower($result["sections"][0]["title"]), strtolower($result["sections"][1]["title"]), 
-                        "Broadcasts returned out of order: title ASC");
+        $result = $v->sections(array("site" => "volar", "sort_by" => "title", "sort_dir" => "ASC"));
+        $this->assertGreaterThanOrEqual(strtolower($result["sections"][0]["title"]), strtolower($result["sections"][1]["title"]), 
+            "Sections returned out of order: title ASC");
                 
-                $result = $v->sections(array("site" => "volar", "sort_by" => "title", "sort_dir" => "DESC"));
-                print_r($result);
+        $result = $v->sections(array("site" => "volar", "sort_by" => "title", "sort_dir" => "DESC"));
+        print_r($result);
 		$this->assertLessThanOrEqual(strtolower($result["sections"][0]["title"]), strtolower($result["sections"][1]["title"]),
-                        "Broadcasts returned out of order: title DESC");
+            "Sections returned out of order: title DESC");
 	}
 
 	function testPerPageBounds()

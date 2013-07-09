@@ -11,9 +11,9 @@ class BasicTimezoneTest extends PHPUnit_Framework_TestCase {
 	{
 
 		//generates arguments based on an array of integers passed by the test. 
-		//Negative numbers are invalid data, Positive numbers are expected to work.
+		//1s are invalid data, 2s are expected to work.
 		//Zero means that the argument will not be passed
-		function paramMux($seed)
+		function paramDemux($seed)
 		{
 			//Expected indicates whether or not the request is expected to succeed
 			//Empty indicates that no results are expected to be returned
@@ -73,7 +73,7 @@ class BasicTimezoneTest extends PHPUnit_Framework_TestCase {
 		for($b = 0; $b <= 2; $b++)
 		for($c = 0; $c <= 2; $c++){
 			$param_seed = array($a, $b, $c);
-			$test_case = paramMux($param_seed);
+			$test_case = paramDemux($param_seed);
 			if($test_case["expected"])
 			{
 				unset($test_case["expected"]);

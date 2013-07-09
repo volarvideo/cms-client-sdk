@@ -40,11 +40,11 @@ class AdvPlaylistTest extends PHPUnit_Framework_TestCase {
                                 "page" => 1,
                                 "per_page" => 30,
                                 "section_id" => 1,
-                                "broadcast_id" => 1,
-				"video_id" => 1,
-                                "id" => 495,
+                                "broadcast_id" => 495,
+								"video_id" => 1,
+                                "id" => 1,
                                 "title" => "volar_archive",
-                                "sort_by" => "description",
+                                "sort_by" => "id",
                                 "sort_dir" => "asc"
                                 );
                 $result = $v->playlists($params);

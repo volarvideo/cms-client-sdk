@@ -1,21 +1,13 @@
 <?php
-
-/*
-
-BE CAREFUL WHEN RUNNING
-Takes a VERY long time
-
-*/
-
 require("../Volar.php");
 require("../test_config.php");
-class BasicSectionTest extends PHPUnit_Framework_TestCase {
+class IndividualSectionTest extends PHPUnit_Framework_TestCase {
 	var $server = VOLAR_BASE_URL;
 	var $api_key = VOLAR_API_KEY;
 	var $secret_key = VOLAR_SECRET_KEY;
 
 	
-	function testBasicSectionRetrieval()
+	function testSectionRetrieval()
 	{
 
 		//generates arguments based on an array of integers passed by the test. 
@@ -26,9 +18,10 @@ class BasicSectionTest extends PHPUnit_Framework_TestCase {
 			//Expected indicates whether or not the request is expected to succeed
 			//Empty indicates that no sites are expected to be returned
 			$gen_params = array("expected" => true, "empty" => false);
+			$gen_params["site"] = 'volar';
 			switch ($seed[0])
 			{
-				case 0:
+				/*case 0:
 					$gen_params["expected"] = false;
 					break;
 				case 1:
@@ -37,7 +30,7 @@ class BasicSectionTest extends PHPUnit_Framework_TestCase {
 					break;
 				case 2:
 					$gen_params["site"] = "volar";
-					break;
+					break;*/
 			}
 			switch ($seed[1])
 			{
@@ -47,7 +40,7 @@ class BasicSectionTest extends PHPUnit_Framework_TestCase {
 					$gen_params["page"] = -1;
 					break;
 				case 2:
-					$gen_params["page"] = 1;
+					$gen_params["page"] = "1";
 					break;
 			}
 			switch ($seed[2])
@@ -67,9 +60,10 @@ class BasicSectionTest extends PHPUnit_Framework_TestCase {
 					break;
 				case 1:
 					$gen_params["broadcast_id"] = -1;
+					$gen_params["empty"] = true;
 					break;
 				case 2:
-					$gen_params["broadcast_id"] = 1;
+					$gen_params["broadcast_id"] = 495;
 					break;
 			}
 			switch ($seed[4])
@@ -78,6 +72,7 @@ class BasicSectionTest extends PHPUnit_Framework_TestCase {
 					break;
 				case 1:
 					$gen_params["video_id"] = -1;
+					$gen_params["empty"] = true;
 					break;
 				case 2:
 					$gen_params["video_id"] = 1;
@@ -92,7 +87,7 @@ class BasicSectionTest extends PHPUnit_Framework_TestCase {
 					$gen_params["empty"] = true;
 					break;
 				case 2:
-					$gen_params["id"] = "1";
+					$gen_params["id"] = 1;
 					break;
 			}
 			switch ($seed[6])
@@ -100,7 +95,7 @@ class BasicSectionTest extends PHPUnit_Framework_TestCase {
 				case 0:
 					break;
 				case 1:
-					$gen_params["title"] = "Hotbox";
+					$gen_params["title"] = "Quidditch";
 					$gen_params["empty"] = true;
 					break;
 				case 2:
@@ -112,20 +107,21 @@ class BasicSectionTest extends PHPUnit_Framework_TestCase {
 				case 0:
 					break;
 				case 1:
-					$gen_params["sort_by"] = "Flagellum";
+					$gen_params["sort_by"] = "length";
 					break;
 				case 2:
-					$gen_params["sort_by"] = "title";
+					$gen_params["sort_by"] = "id";
 					break;
-			}switch ($seed[8])
+			}
+			switch ($seed[8])
 			{
 				case 0:
 					break;
 				case 1:
-					$gen_params["sort_dir"] = "right";
+					$gen_params["sort_dir"] = "north";
 					break;
 				case 2:
-					$gen_params["sort_dir"] = "desc";
+					$gen_params["sort_dir"] = "DESC";
 					break;
 			}
 			return $gen_params;
@@ -140,42 +136,35 @@ class BasicSectionTest extends PHPUnit_Framework_TestCase {
 		$v = new Volar($this->api_key, $this->secret_key, $this->server);
 
 		//generate argument types. 0 = empty, 1 = invalid, 2 = valid
-		//
-		//Sorry for the lack of indentation, didn"t want this file to be a mile wide
-		for($a = 0; $a <= 2; $a++)
-		for($b = 0; $b <= 2; $b++)
-		for($c = 0; $c <= 2; $c++)
-		for($d = 0; $d <= 2; $d++)
-		for($e = 0; $e <= 2; $e++)
-		for($f = 0; $f <= 2; $f++)
-		for($g = 0; $g <= 2; $g++)
-		for($h = 0; $h <= 2; $h++)
-		for($i = 0; $i <= 2; $i++){
-			$param_seed = array($a, $b, $c, $d, $e, $f, $g, $h, $i);
-			$test_case = paramDemux($param_seed);
-			if($test_case["expected"])
-			{
-
-				unset($test_case["expected"]);
-				if($test_case["empty"])
+		for($i = 0; $i <= 7; $i++)
+			for($j = 0; $j <= 2; $j++){
+				$param_seed = array();
+				for($k = 0; $k <=7; $k++)
+					$param_seed[$k] = 0;
+				$param_seed[$i] = $j;
+				$test_case = paramDemux($param_seed);
+				if($test_case["expected"])
 				{
-					unset($test_case["empty"]);
-					$result = $v->sections($test_case);
-					$this->assertEmpty($result["sections"], "Failure on case: ".$a.$b.$c.$d.$e.$f.$g.$h.$i);
+					unset($test_case["expected"]);
+					if($test_case["empty"])
+					{
+						unset($test_case["empty"]);
+						$result = $v->broadcasts($test_case);
+						$this->assertEmpty($result["sections"], "Failure on case: ".$i.", ".$j);
+					}
+					else
+					{
+						unset($test_case["empty"]);
+						$this->assertInternalType("array", $v->sections($test_case), "Failure on case: ".$i.", ".$j);
+					}
 				}
 				else
 				{
+					unset($test_case["expected"]);
 					unset($test_case["empty"]);
-					$this->assertInternalType("array", $v->sections($test_case), "Failure on case: ".$a.$b.$c.$d.$e.$f.$g.$h.$i);
+					$this->assertFalse($v->sections($test_case), "Failure on case: ".$i.", ".$j);
 				}
 			}
-			else
-			{
-				unset($test_case["expected"]);
-				unset($test_case["empty"]);
-				$this->assertFalse($v->sections($test_case), "Failure on case: ".$a.$b.$c.$d.$e.$f.$g.$h.$i);
-			}
-		}
 	}
 	
 }

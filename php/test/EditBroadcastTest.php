@@ -17,6 +17,8 @@ class EditBroadcastTest extends PHPUnit_Framework_TestCase {
 
 	//change to false to save all generated broadcasts after testing
 	var $DELETE_BROADCASTS = true;
+	//File path for uploaded image
+	var $POSTER_PATH = "/home/volar/Desktop/cms-client-sdk/php/test/pulp_fiction_lrg.jpg";
 
 	function testBroadcastCreateAndDelete()
 	{
@@ -109,7 +111,7 @@ class EditBroadcastTest extends PHPUnit_Framework_TestCase {
 		$broadcast_details = $result["broadcast"];
 
 		$update_params = array("site" => "volar", "id" => $broadcast_details["id"]);
-		$result = $v->broadcast_update($update_params);
+		$result = $v->broadcast_archive($update_params);
 		$this->assertTrue($result["success"], "Archival Failed");
 
 		if($DELETE_BROADCASTS)
@@ -174,8 +176,8 @@ class EditBroadcastTest extends PHPUnit_Framework_TestCase {
 		$broadcast_details = $result["broadcast"];
 
 		$image_params = array("site" => "volar", "id" => $broadcast_details["id"]);
-		$result = $v->broadcast_poster($image_params, "~/Desktop/cms-client-sdk/php/test/pulp_fiction_lrg.jpg", "pulpfiction.jpg");
-		$this->assertTrue($result["success"], "Image Upload Failed");	
+		$result = $v->broadcast_poster($image_params, $POSTER_PATH, "pulpfiction.jpg");
+		$this->assertTrue($result["success"], "Image Upload Failed");
 		
 		if($DELETE_BROADCASTS)
 		{

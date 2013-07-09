@@ -116,7 +116,6 @@ class AdvAccountInfoTest extends PHPUnit_Framework_TestCase {
 		$result = $v->sites($params);
 		//print_r($result);
 		$this->assertGreaterThan(0, count($result["sites"]), "Unable to search by slug");
-		$this->assertTrue(true);
 
 		$params = array("title" => "Vid");
 		$result = $v->sites($params);

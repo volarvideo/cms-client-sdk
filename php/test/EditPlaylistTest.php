@@ -70,9 +70,8 @@ class EditPlaylistTest extends PHPUnit_Framework_TestCase {
 		
 		$update_params = array("site" => "volar", "id" => $playlist_details["id"], "title" => "api_test_2");
 		$result = $v->playlist_update($update_params);
-		print_r($result);
 		$this->assertTrue($result["success"], "Title Update Failed");
-		$this->assertEquals($update_params["title"], $result["title"], "Title Not Updated");
+		$this->assertEquals($update_params["title"], $result["playlist"]["title"], "Title Not Updated");
 
 		$update_params["available"] = "no";
 		$result = $v->playlist_update($update_params);
@@ -81,12 +80,13 @@ class EditPlaylistTest extends PHPUnit_Framework_TestCase {
 		$update_params["description"] = "API Playlist Testing";
 		$result = $v->playlist_update($update_params);
 		$this->assertTrue($result["success"], "Description Update Failed");
-		$this->assertEquals($update_params["description"], $result["description"], "Descrption Not Updated");
+		print_r($result);
+		$this->assertEquals($update_params["description"], $result["playlist"]["description"], "Descrption Not Updated");
 
 		$update_params["section_id"] = 2;
 		$result = $v->playlist_update($update_params);
 		$this->assertTrue($result["success"], "Section Update Failed");
-		$this->assertEquals($update_params["section_id"], $result["section_id"], "Section ID Not Updated");
+		$this->assertEquals($update_params["section_id"], $result["playlist"]["section_id"], "Section ID Not Updated");
 
 		if($DELETE_PLAYLISTS)
 		{

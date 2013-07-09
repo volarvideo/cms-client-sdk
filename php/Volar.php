@@ -95,7 +95,7 @@ class Volar {
 	}
 
 	/**
-	 *	creates a new broadcast
+	 *	update a new broadcast
 	 *	@param mixed $params associative array or json string
 	 *		recognized parameters:
 	 *			- required -

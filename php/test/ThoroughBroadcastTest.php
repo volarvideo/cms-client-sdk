@@ -19,9 +19,9 @@ class BasicBroadcastTest extends PHPUnit_Framework_TestCase {
 	{
 
 		//generates arguments based on an array of integers passed by the test. 
-		//Negative numbers are invalid data, Positive numbers are expected to work.
+		//1s are invalid data, 2s are expected to work.
 		//Zero means that the argument will not be passed
-		function paramMux($seed)
+		function paramDemux($seed)
 		{
 			//Expected indicates whether or not the request is expected to succeed
 			//Empty indicates that no sites are expected to be returned
@@ -202,7 +202,7 @@ class BasicBroadcastTest extends PHPUnit_Framework_TestCase {
 		for($l = 0; $l <= 2; $l++)
 		for($m = 0; $m <= 2; $m++)({
 			$param_seed = array($a, $b, $c, $d, $e, $f, $g, $h, $i, $j);
-			$test_case = paramMux($param_seed);
+			$test_case = paramDemux($param_seed);
 			if($test_case["expected"])
 			{
 
