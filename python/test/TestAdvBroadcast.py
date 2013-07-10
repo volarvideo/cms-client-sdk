@@ -28,6 +28,8 @@ class TestAdvBroadcast(unittest.TestCase):
 		response = self.v.broadcasts({'site': 'volar'})
 		self.assertTrue(response != False, 'Connection To Broadcasts Failed')
 
+		#pprint.pprint(response)
+
 		self.assertTrue(isinstance(response['list'], basestring), "Incorrect Type Returned for list (should be basestring)")
 		self.assertTrue(isinstance(response['item_count'], basestring), "Incorrect Type Returned for item_count (should be basestring)")
 		self.assertTrue(isinstance(response['page'], int), "Incorrect Type Returned for page (should be int)")

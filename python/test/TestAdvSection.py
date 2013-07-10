@@ -22,6 +22,8 @@ class TestAdvSection(unittest.TestCase):
 		response = self.v.sections({'site': 'volar'})
 		self.assertTrue(response != False, 'Connection To sections Failed')
 
+		#pprint.pprint(response)
+
 		self.assertTrue(isinstance(response['item_count'], basestring), "Incorrect Type Returned for item_count (should be basestring)")
 		self.assertTrue(isinstance(response['page'], int), "Incorrect Type Returned for page (should be int)")
 		self.assertTrue(isinstance(response['per_page'], int), "Incorrect Type Returned for per_page (should be int)")
