@@ -39,9 +39,9 @@ class Volar(object):
 			'title' : title of site.  useful for searches, as this accepts
 				incomplete titles and returns all matches.
 			'sort_by' : data field to use to sort.  allowed fields are date,
-				status, id, title, description
+				status, id, title, description. defaults to title
 			'sort_dir' : direction of sort.  allowed values are 'asc'
-				(ascending) and 'desc' (descending)
+				(ascending) and 'desc' (descending). defaults to asc.
 		@return false on failure, dict on success.  if failed, Volar.error can
 			be used to get last error string
 		"""
@@ -72,9 +72,9 @@ class Volar(object):
 			'embed_width' : width (in pixels) that embed should be.  defaults
 				to 640
 			'sort_by' : data field to use to sort.  allowed fields are date,
-				status, id, title, description
+				status, id, title, description. defaults to date.
 			'sort_dir' : direction of sort.  allowed values are 'asc'
-				(ascending) and 'desc' (descending)
+				(ascending) and 'desc' (descending). defaults to desc
 		@return false on failure, dict on success.  if failed, Volar.error can
 			be used to get last error string
 		"""
@@ -289,9 +289,9 @@ class Volar(object):
 			'title' : title of section.  useful for searches, as this accepts
 				incomplete titles and returns all matches.
 			'sort_by' : data field to use to sort.  allowed fields are id,
-				title
+				title. defaults to title
 			'sort_dir' : direction of sort.  allowed values are 'asc'
-				(ascending) and 'desc' (descending)
+				(ascending) and 'desc' (descending). defaults to asc
 		@return false on failure, dict on success.  if failed, Volar.error can
 			be used to get last error string
 		"""
@@ -321,9 +321,9 @@ class Volar(object):
 			'title' : title of playlist.  useful for searches, as this accepts
 				incomplete titles and returns all matches.
 			'sort_by' : data field to use to sort.  allowed fields are id,
-				title
+				title. defaults to title
 			'sort_dir' : direction of sort.  allowed values are 'asc'
-				(ascending) and 'desc' (descending)
+				(ascending) and 'desc' (descending). defaults to asc
 		@return false on failure, dict on success.  if failed, Volar.error can
 			be used to get last error string
 		"""

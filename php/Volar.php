@@ -31,8 +31,8 @@ class Volar {
 	 *				'id'				id of site - useful if you only want to get details of a single site
 	 *				'slug'				slug of site.  useful for searches, as this accepts incomplete titles and returns all matches.
 	 *				'title'				title of site.  useful for searches, as this accepts incomplete titles and returns all matches.
-	 *				'sort_by'			data field to use to sort.  allowed fields are status, id, title, description
-	 *				'sort_dir'			direction of sort.  allowed values are 'asc' (ascending) and 'desc' (descending)
+	 *				'sort_by'			data field to use to sort.  allowed fields are status, id, title, description. defaults to title
+	 *				'sort_dir'			direction of sort.  allowed values are 'asc' (ascending) and 'desc' (descending). defaults to asc
 	 *	@return false on failure, array on success.  if failed, $volar->getError() can be used to get last error string
 	 */
 	public function sites($params = array())
@@ -59,8 +59,8 @@ class Volar {
 	 *				'before' 			return broadcasts that occur before specified date.  can be a date string or integer timestamp.  note that date strings should be in standard formats.
 	 *				'after' 			return broadcasts that occur after specified date.  can be a date string or integer timestamp.  note that date strings should be in standard formats.
 	 *										note - if both before and after are included, broadcasts between the supplied dates are returned.
-	 *				'sort_by'			data field to use to sort.  allowed fields are date, status, id, title, description
-	 *				'sort_dir'			direction of sort.  allowed values are 'asc' (ascending) and 'desc' (descending)
+	 *				'sort_by'			data field to use to sort.  allowed fields are date, status, id, title, description. defaults to date
+	 *				'sort_dir'			direction of sort.  allowed values are 'asc' (ascending) and 'desc' (descending). defaults to desc
 	 *	@return false on failure, array on success.  if failed, $volar->getError() can be used to get last error string
 	 */
 	public function broadcasts($params = array())
@@ -95,7 +95,7 @@ class Volar {
 	}
 
 	/**
-	 *	creates a new broadcast
+	 *	update a new broadcast
 	 *	@param mixed $params associative array or json string
 	 *		recognized parameters:
 	 *			- required -
@@ -191,8 +191,8 @@ class Volar {
 	 *				'video_id'			id of video you wish to limit list to.  will always return 1.  note this is not fully supported yet.
 	 *				'id'				id of section - useful if you only want to get details of a single section
 	 *				'title'				title of section.  useful for searches, as this accepts incomplete titles and returns all matches.
-	 *				'sort_by'			data field to use to sort.  allowed fields are id, title
-	 *				'sort_dir'			direction of sort.  allowed values are 'asc' (ascending) and 'desc' (descending)
+	 *				'sort_by'			data field to use to sort.  allowed fields are id, title. defaults to title
+	 *				'sort_dir'			direction of sort.  allowed values are 'asc' (ascending) and 'desc' (descending). defaults to asc
 	 *	@return false on failure, array on success.  if failed, $volar->getError() can be used to get last error string
 	 */
 	public function sections($params = array())
@@ -219,8 +219,8 @@ class Volar {
 	 *				'section_id'		id of section you wish to limit list to
 	 *				'id'				id of playlist - useful if you only want to get details of a single playlist
 	 *				'title'				title of playlist.  useful for searches, as this accepts incomplete titles and returns all matches.
-	 *				'sort_by'			data field to use to sort.  allowed fields are id, title
-	 *				'sort_dir'			direction of sort.  allowed values are 'asc' (ascending) and 'desc' (descending)
+	 *				'sort_by'			data field to use to sort.  allowed fields are id, title. defaults to title
+	 *				'sort_dir'			direction of sort.  allowed values are 'asc' (ascending) and 'desc' (descending). defaults to asc
 	 *	@return false on failure, array on success.  if failed, $volar->getError() can be used to get last error string
 	 */
 	public function playlists($params = array())
