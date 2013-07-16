@@ -1,0 +1,64 @@
+<html>
+<head>
+<style type="text/css">
+#embed { width: 420px; position: fixed; top: 0; left: 0; padding: 10px; }
+#embed h4 { margin: 0; padding: 0 0 5px; }
+#responseElement {
+	position: absolute;
+	top: 0;
+	left: 420px;
+	right: 0;
+}
+#responseElement .broadcast {
+	padding: 10px;
+}
+#responseElement .broadcast h3 { margin: 0; padding: 0 0 5px; }
+#responseElement .image {
+	width:110px; float: left; padding: 5px;
+}
+#responseElement .current-broadcast {
+	background: #ccc;
+}
+</style>
+<script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+<script src="Volar.js"></script>
+<script type="text/javascript">
+	function listBroadcasts(data)
+	{
+		if(data.item_count > 0)
+		{
+			for(i in data.broadcasts)
+			{
+				addBroadcast(data.broadcasts[i]);
+			}
+		}
+		else
+		{
+			$('#responseElement').append('<p>No broadcasts found</p>');
+		}
+	}
+	function addBroadcast(b)
+	{
+		var html = '<a name="broadcast' + b.id + '"></a><div class="image">' + (b.small_image ? '<img src="' + b.small_image + '" />' : '') + '</div>';
+		html += '<div class="details"><h3>' + b.title + '</h3>' + (b.description ? b.description : '') + '</div>';
+
+		var el = $('<div class="broadcast">' + html + '<div style="clear:both"></div></div>').appendTo('#responseElement');
+
+		$('h3', el).click(function(){
+			$('#responseElement > .broadcast.current-broadcast').removeClass('current-broadcast');
+			$(this).parents('div.broadcast:first').addClass('current-broadcast');
+			$('#embed').html('<h4><a href="#broadcast' + b.id + '">' + b.title + '</a></h4>' + b.embed_code);
+		});
+	}
+	
+	$(document).ready(function(){
+		Volar.broadcasts({'callback' : listBroadcasts, 'site' : 'volar', 'embed_width' : 400, 'autoplay' : 1 });
+	});
+
+</script>
+</head>
+<body>
+<div id="embed"></div>
+<div id="responseElement"></div>
+</body>
+</html>

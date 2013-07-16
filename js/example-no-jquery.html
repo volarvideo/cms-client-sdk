@@ -1,0 +1,58 @@
+<html>
+<head>
+<style type="text/css">
+#embed { width: 420px; position: fixed; top: 0; left: 0; padding: 10px; }
+#embed h4 { margin: 0; padding: 0 0 5px; }
+#responseElement {
+	position: absolute;
+	top: 0;
+	left: 420px;
+	right: 0;
+}
+#responseElement .broadcast {
+	padding: 10px;
+}
+#responseElement .broadcast h3 { margin: 0; padding: 0 0 5px; }
+#responseElement .image {
+	width:110px; float: left; padding: 5px;
+}
+#responseElement .current-broadcast {
+	background: #ccc;
+}
+</style>
+<script src="Volar.js"></script>
+<script type="text/javascript">
+	function listBroadcasts(data)
+	{
+		if(data.item_count > 0)
+		{
+			var html = '';
+			for(i in data.broadcasts)
+			{
+				html += addBroadcast(data.broadcasts[i]);
+			}
+			document.getElementById('responseElement').innerHTML = html;
+		}
+		else
+		{
+			document.getElementById('responseElement').innerHTML = '<p>No broadcasts found</p>';
+		}
+	}
+	function addBroadcast(b)
+	{
+		var html = '<a name="broadcast' + b.id + '"></a><div class="image">' + (b.small_image ? '<img src="' + b.small_image + '" />' : '') + '</div>';
+		html += '<div class="details"><h3>' + b.title + '</h3>' + (b.description ? b.description : '') + '</div>';
+		return '<div class="broadcast">' + html + '<div style="clear:both"></div></div>';
+
+	}
+
+	window.onload = function(){
+		Volar.broadcasts({'callback' : listBroadcasts, 'site' : 'volar', 'embed_width' : 400, 'autoplay' : 1 });
+	}
+</script>
+</head>
+<body>
+<div id="embed"></div>
+<div id="responseElement"></div>
+</body>
+</html>
