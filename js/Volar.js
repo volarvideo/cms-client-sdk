@@ -23,8 +23,8 @@ var Volar = {
 	 *				'playlist_id'		id of playlist you wish to limit list to
 	 *				'id'				id of broadcast - useful if you only want to get details of a single broadcast
 	 *				'title'				title of broadcast.  useful for searches, as this accepts incomplete titles and returns all matches.
-	 *				'autoplay'			true or false.  defaults to false.  used in embed code to prevent player from immediately playing
-	 *				'embed_width'		width (in pixels) that embed should be.  defaults to 640
+	 *				'autoplay'			1 (true) or 0 (false).  defaults to false.  used in embed code to prevent player from immediately playing
+	 *				'embed_width'		width (in pixels) that embed should be.  defaults to 640. At the moment, widths below 416 are not fully supported
 	 *				'before' 			return broadcasts that occur before specified date.  can be a date string or integer timestamp.  note that date strings should be in standard formats.
 	 *				'after' 			return broadcasts that occur after specified date.  can be a date string or integer timestamp.  note that date strings should be in standard formats.
 	 *										note - if both before and after are included, broadcasts between the supplied dates are returned.
