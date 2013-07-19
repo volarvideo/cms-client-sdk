@@ -91,6 +91,11 @@ class Volar(object):
 		@param dict params
 			- required -
 			'title' : title of the new broadcast
+			'contact_name' : contact name of person we should contact if we detect problems with this broadcast
+			'contact_phone' : phone we should use to contact contact_name person
+			'contact_sms' : sms number we should use to send text messages to contact_name person
+			'contact_email' : email address we should use to send emails to contact_name person
+				* note that contact_phone can be omitted if contact_sms is supplied, and vice-versa
 			- optional -
 			'description' : HTML formatted description of the broadcast.
 			'status' : currently only supports 'scheduled' & 'upcoming'
@@ -145,6 +150,11 @@ class Volar(object):
 			'section_id' : id of the section that this broadcast should
 				be assigned.  the Volar.sections() call can give you a
 				list of available sections.  Defaults to a 'General' section
+			'contact_name' : contact name of person we should contact if we detect problems with this broadcast
+			'contact_phone' : phone we should use to contact contact_name person
+			'contact_sms' : sms number we should use to send text messages to contact_name person
+			'contact_email' : email address we should use to send emails to contact_name person
+				* note that contact_phone can be omitted if contact_sms is supplied, and vice-versa
 		@return dict
 			{
 				'success' : True or False depending on success
