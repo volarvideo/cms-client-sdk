@@ -75,15 +75,16 @@ class Volar {
 	 *			- required -
 	 *				'site'				slug of site to assign broadcast to. note that if the api user does not have permission to create broadcasts on the given site, an error will be produced.
 	 *				'title'				title of the broadcast
+	 *				'contact_name'		contact name of person we should contact if we detect problems with this broadcast
+	 *				'contact_phone'		phone we should use to contact contact_name person
+	 *				'contact_sms'		sms number we should use to send text messages to contact_name person
+	 *				'contact_email'		email address we should use to send emails to contact_name person
+	 *					* note that contact_phone can be omitted if contact_sms is supplied, and vice-versa
 	 *			- optional -
 	 *				'date'				date of broadcast. Will default to current time.  can be a date string or integer timestamp.  note that date strings should be in standard formats.
 	 *				'timezone'			allows you to specify what timezone this date refers to. will default to the UTC timezone. For a list of accepted timezones, see the Supported Timezones api call.
 	 *				'description'		html formatted text for the description of the broadcast. matches.
 	 *				'section_id'		id of section to assign broadcast to. will default to 'General'.
-	 *				'contact_name'		contact name of person we should contact if we detect problems with this broadcast
-	 *				'contact_phone'		phone we should use to contact contact_name person
-	 *				'contact_sms'		sms number we should use to send text messages to contact_name person
-	 *				'contact_email'		email address we should use to send emails to contact_name person
 	 */
 	public function broadcast_create($params = '')
 	{
