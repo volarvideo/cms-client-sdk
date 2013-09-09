@@ -1,3 +1,4 @@
 .DS_Store
 phpunit.phar
 python/*.pyc
+php/test_config.php
