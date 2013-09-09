@@ -54,7 +54,10 @@ class Volar(object):
 
 		@param dict params
 			- required -
-			'site' : slug of site to filter to.
+			'site' OR 'sites'	slug of site to filter to.
+				if passing 'sites', users can include a comma-delimited list of
+				sites.  results will reflect all broadcasts in the listed
+				sites.
 			- optional -
 			'list' : type of list.  allowed values are 'all', 'archived', 
 				'scheduled' or 'upcoming', 'upcoming_or_streaming',
@@ -79,8 +82,8 @@ class Volar(object):
 			be used to get last error string
 		"""
 
-		if('site' not in params):
-			self.error = 'site is required'
+		if(('site' not in params) and ('sites' not in params)):
+			self.error = '"site" or "sites" parameter is required'
 			return False
 		return self.request(route = 'api/client/broadcast', params = params)
 
@@ -286,7 +289,9 @@ class Volar(object):
 
 		@param dict params
 			- required -
-			'site' : slug of site to filter to.
+			'site' OR 'sites'	slug of site to filter to.
+				if passing 'sites', users can include a comma-delimited list of
+				sites.  results will reflect all sections in the listed sites.
 			- optional -
 			'page' : current page of listings.  pages begin at '1'
 			'per_page' : number of broadcasts to display per page
@@ -306,8 +311,8 @@ class Volar(object):
 			be used to get last error string
 		"""
 
-		if('site' not in params):
-			self.error = 'site is required'
+		if(('site' not in params) and ('sites' not in params)):
+			self.error = '"site" or "sites" parameter is required'
 			return False
 
 		return self.request(route = 'api/client/section', params = params)
@@ -318,7 +323,10 @@ class Volar(object):
 
 		@param dict params
 			- required -
-			'site' : slug of site to filter to.
+			'site' OR 'sites'	slug of site to filter to.
+				if passing 'sites', users can include a comma-delimited list of
+				sites.  results will reflect all playlists in the listed
+				sites.
 			- optional -
 			'page' : current page of listings.  pages begin at '1'
 			'per_page' : number of broadcasts to display per page
@@ -338,8 +346,8 @@ class Volar(object):
 			be used to get last error string
 		"""
 
-		if('site' not in params):
-			self.error = 'site is required'
+		if(('site' not in params) and ('sites' not in params)):
+			self.error = '"site" or "sites" parameter is required'
 			return False
 
 		return self.request(route = 'api/client/playlist', params = params)
@@ -477,7 +485,16 @@ class Volar(object):
 		signature = str(self.secret) + method.upper() + route.strip('/')
 
 		for key, value in sorted(get_params.iteritems()):
-			signature += key + '=' + str(value)
+			if isinstance(value, dict):
+				for v_key, v_value in sorted(value.iteritems()):
+					signature += key + '[' + self.convert_val_to_str(v_key) + ']=' + self.convert_val_to_str(v_value)
+			elif isinstance(value, list) or isinstance(value, tuple):
+				v_key = 0
+				for v_value in value:
+					signature += key + '[' + self.convert_val_to_str(v_key) + ']=' + self.convert_val_to_str(v_value)
+					v_key = v_key + 1
+			else:
+				signature += key + '=' + self.convert_val_to_str(value)
 
 		signature = signature.encode('ascii')
 		if type(post_body) is str:
@@ -486,3 +503,12 @@ class Volar(object):
 		signature = base64.b64encode(hashlib.sha256(signature).digest())[0:43]
 		signature = signature.rstrip('=')
 		return signature
+
+	def convert_val_to_str(self, val):
+		if isinstance(val, bool):
+			if val:
+				return '1'
+			else:
+				return '0'
+		else:
+			return str(val)

@@ -73,7 +73,9 @@ class Volar {
 	 *	@param mixed $params associative array or json string
 	 *		recognized parameters:
 	 *			- required -
-	 *				'site'				slug of site to assign broadcast to. note that if the api user does not have permission to create broadcasts on the given site, an error will be produced.
+	 *				'site' OR 'sites'	slug of site to filter to.
+	 *										if passing 'sites', users can include a comma-delimited list of sites.
+	 *										results will reflect all broadcasts in the listed sites.
 	 *				'title'				title of the broadcast
 	 *				'contact_name'		contact name of person we should contact if we detect problems with this broadcast
 	 *				'contact_phone'		phone we should use to contact contact_name person
@@ -184,7 +186,9 @@ class Volar {
 	 *	@param array $params associative array
 	 *			recognized parameters in array:
 	 *				- required -
-	 *				'site'				slug of site to filter to.
+	 *				'site' OR 'sites'	slug of site to filter to.
+	 *										if passing 'sites', users can include a comma-delimited list of sites.
+	 *										results will reflect all sections in the listed sites.
 	 *				- optional -
 	 *				'page'				current page of listings.  pages begin at '1'
 	 *				'per_page'			number of broadcasts to display per page
@@ -198,9 +202,9 @@ class Volar {
 	 */
 	public function sections($params = array())
 	{
-		if(!isset($params['site']))
+		if(!isset($params['site']) && !isset($params['sites']))
 		{
-			$this->error = 'site is required';
+			$this->error = '"site" or "sites" parameter is required';
 			return false;
 		}
 		return $this->request('api/client/section', 'GET', $params);
@@ -211,7 +215,9 @@ class Volar {
 	 *	@param array $params associative array
 	 *			recognized parameters in array:
 	 *				- required -
-	 *				'site'				slug of site to filter to.
+	 *				'site' OR 'sites'	slug of site to filter to.
+	 *										if passing 'sites', users can include a comma-delimited list of sites.
+	 *										results will reflect all playlists in the listed sites.
 	 *				- optional -
 	 *				'page'				current page of listings.  pages begin at '1'
 	 *				'per_page'			number of broadcasts to display per page
@@ -308,7 +314,15 @@ class Volar {
 		$query_string = '';
 		foreach($params as $key => $value)
 		{
-			$query_string .= ($query_string ? '&' : '?') .$key .'='. urlencode($value);
+			if(is_array($value))
+			{
+				foreach($value as $v_key => $v_value)
+				{
+					$query_string .= ($query_string ? '&' : '?') .$key .'['.urlencode($v_key).']='. urlencode($v_value);
+				}
+			}
+			else
+				$query_string .= ($query_string ? '&' : '?') .$key .'='. urlencode($value);
 		}
 		$query_string .= '&signature='.$signature;	//signature doesn't need to be urlencoded, as the buildSignature function does it for you.
 
@@ -341,9 +355,20 @@ class Volar {
 		ksort($get_params);
 		$stringToSign = $this->secret.$type.trim($route, '/');
 
-		foreach($get_params as $key => $value)
+		foreach($get_params as $key => $value)	//note that get_params are NOT urlencoded
 		{
-			$stringToSign .= $key.'='.$value;	//note that get_params are NOT urlencoded
+			if(is_array($value))
+			{
+				ksort($value);
+				foreach($value as $v_key => $v_value)
+				{
+					$stringToSign .= $key.'['.$v_key.']='.$v_value;
+				}
+			}
+			else
+			{
+				$stringToSign .= $key.'='.$value;
+			}
 		}
 
 		if(!is_array($post_body))

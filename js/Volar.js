@@ -12,7 +12,9 @@ var Volar = {
 	 *	@param object opts
 	 *			recognized parameters in object:
 	 *				- required -
-	 *				'site'				slug of site to filter to.
+	 *				'site' OR 'sites'	slug of site to filter to.
+	 *										if passing 'sites', users can include a comma-delimited list of sites.
+	 *										results will reflect all broadcasts in the listed sites.
 	 *				'callback'			javascript function name that should be executed once the jsonp call is completed.
 	 *										Actual function pointers are supported.
 	 *				- optional -
@@ -32,7 +34,7 @@ var Volar = {
 	 *				'sort_dir'			direction of sort.  allowed values are 'asc' (ascending) and 'desc' (descending)
 	 *	Because the function operates on jsonp, the function supplied in the 'callback' argument is called with the returned data.
 	 *	The function should be able to handle an object that is structured with the data as listed on 
-	 *		https://github.com/volarvideo/cms-client-sdk/wiki/Creating-API-Connections-without-the-SDK-code#listing-broadcasts
+	 *		https://github.com/volarvideo/cms-client-sdk/wiki/Creating-API-Connections-without-the-SDK-code#wiki-broadcast-list
 	 */
 
 	'broadcasts' : function(opts) {
@@ -41,12 +43,96 @@ var Volar = {
 			this.log('"callback" argument is required.')
 			return;
 		}
-		if(!('site' in opts))
+		if(!('site' in opts) && !('sites' in opts))
 		{
-			this.log('"site" argument is required.')
+			this.log('"site" or "sites" arguments are required.')
 			return;
 		}
 		var api_url = ('https:' == document.location.protocol ? 'https://' : 'http://') + this.base_url + '/api/client/broadcast';
+		this.execute(api_url, opts);
+	},
+
+	/**
+	 *	gets list of sections
+	 *	@param array $params associative array
+	 *			recognized parameters in array:
+	 *				- required -
+	 *				'site' OR 'sites'	slug of site to filter to.
+	 *										if passing 'sites', users can include a comma-delimited list of sites.
+	 *										results will reflect all sections in the listed sites.
+	 *				'callback'			javascript function name that should be executed once the jsonp call is completed.
+	 *										Actual function pointers are supported.
+	 *				- optional -
+	 *				'page'				current page of listings.  pages begin at '1'
+	 *				'per_page'			number of broadcasts to display per page
+	 *				'broadcast_id'		id of broadcast you wish to limit list to.  will always return 1
+	 *				'video_id'			id of video you wish to limit list to.  will always return 1.  note this is not fully supported yet.
+	 *				'id'				id of section - useful if you only want to get details of a single section
+	 *				'title'				title of section.  useful for searches, as this accepts incomplete titles and returns all matches.
+	 *				'sort_by'			data field to use to sort.  allowed fields are id, title. defaults to title
+	 *				'sort_dir'			direction of sort.  allowed values are 'asc' (ascending) and 'desc' (descending). defaults to asc
+	 *	Because the function operates on jsonp, the function supplied in the 'callback' argument is called with the returned data.
+	 *	The function should be able to handle an object that is structured with the data as listed on 
+	 *		https://github.com/volarvideo/cms-client-sdk/wiki/Creating-API-Connections-without-the-SDK-code#wiki-section-list
+	 */
+
+	'sections' : function(opts) {
+		if(!('callback' in opts))
+		{
+			this.log('"callback" argument is required.')
+			return;
+		}
+		if(!('site' in opts) && !('sites' in opts))
+		{
+			this.log('"site" or "sites" arguments are required.')
+			return;
+		}
+		var api_url = ('https:' == document.location.protocol ? 'https://' : 'http://') + this.base_url + '/api/client/section';
+		this.execute(api_url, opts);
+	},
+
+	/**
+	 *	gets list of playlists
+	 *	@param array $params associative array
+	 *			recognized parameters in array:
+	 *				- required -
+	 *				'site' OR 'sites'	slug of site to filter to.
+	 *										if passing 'sites', users can include a comma-delimited list of sites.
+	 *										results will reflect all playlists in the listed sites.
+	 *				'callback'			javascript function name that should be executed once the jsonp call is completed.
+	 *										Actual function pointers are supported.
+	 *				- optional -
+	 *				'page'				current page of listings.  pages begin at '1'
+	 *				'per_page'			number of broadcasts to display per page
+	 *				'broadcast_id'		id of broadcast you wish to limit list to.
+	 *				'video_id'			id of video you wish to limit list to.  note this is not fully supported yet.
+	 *				'section_id'		id of section you wish to limit list to
+	 *				'id'				id of playlist - useful if you only want to get details of a single playlist
+	 *				'title'				title of playlist.  useful for searches, as this accepts incomplete titles and returns all matches.
+	 *				'sort_by'			data field to use to sort.  allowed fields are id, title. defaults to title
+	 *				'sort_dir'			direction of sort.  allowed values are 'asc' (ascending) and 'desc' (descending). defaults to asc
+	 *	Because the function operates on jsonp, the function supplied in the 'callback' argument is called with the returned data.
+	 *	The function should be able to handle an object that is structured with the data as listed on 
+	 *		https://github.com/volarvideo/cms-client-sdk/wiki/Creating-API-Connections-without-the-SDK-code#wiki-playlist-list
+	 */
+
+	'playlists' : function(opts) {
+		if(!('callback' in opts))
+		{
+			this.log('"callback" argument is required.')
+			return;
+		}
+		if(!('site' in opts) && !('sites' in opts))
+		{
+			this.log('"site" or "sites" arguments are required.')
+			return;
+		}
+		var api_url = ('https:' == document.location.protocol ? 'https://' : 'http://') + this.base_url + '/api/client/playlist';
+		this.execute(api_url, opts);
+	},
+
+	'execute' : function(api_url, opts) {
+
 		opts['cache_breaker'] = Math.random();
 
 		var fake = '';
@@ -72,7 +158,7 @@ var Volar = {
 				{
 					data[i] = fake;
 				}
-				else
+				else if(opts[i] != null)
 				{
 					data[i] = opts[i];
 				}
@@ -94,7 +180,7 @@ var Volar = {
 				{
 					args += (args == '' ? '?' : '&') + 'callback' + '=' + fake;
 				}
-				else
+				else if(opts[i] != null)
 				{
 					args += (args == '' ? '?' : '&') + i + '=' + opts[i];
 				}
@@ -106,9 +192,9 @@ var Volar = {
 				script.src = api_url + args;
 				var s = document.getElementsByTagName('script')[0];
 				s.parentNode.insertBefore(script, s);
-				// s.parentNode.appendChild(script);
 			})();
 		}
+
 	},
 	'log' : function(message) {
 		window.console && console.log(message);
