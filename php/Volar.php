@@ -150,10 +150,6 @@ class Volar {
 			$this->error = 'id is required';
 			return false;
 		}
-		if(empty($image_data))
-		{
-			$this->error = 'missing image data';
-		}
 		$post = array('api_poster' => '@'.ltrim($image_path,'@'));
 		if($image_name)
 		{
@@ -163,8 +159,26 @@ class Volar {
 		return $this->request('api/client/broadcast/poster', 'POST', $params, $post);
 	}
 
-	public function broadcast_archive($params = array(), $file_path = '', $filename = '')
+	/**
+	 *	archives a broadcast
+	 *	@param array $params associative array
+	 *			recognized parameters in array:
+	 *				- required -
+	 *				'site'				slug of site to filter to.
+	 *				'id'				id of broadcast
+	 *	@param string $file_path (optional) path to file you wish to upload.
+	 *				Only necessary if you wish to upload a new video file to an existing broadcast.
+	 *				If your broadcast was streamed via a different method (RTMP or production truck) & you wish to
+	 *				archive the existing video data, omit this argument.
+	 *	@return false on failure, array on success.  if failed, $volar->getError() can be used to get last error string
+	 */
+	public function broadcast_archive($params = array(), $file_path = '')
 	{
+		if(!isset($params['id']))
+		{
+			$this->error = 'id is required';
+			return false;
+		}
 		if(empty($file_path))
 		{
 			return $this->request('api/client/broadcast/archive', 'GET', $params);
@@ -172,11 +186,6 @@ class Volar {
 		else
 		{
 			$post = array('archive' => '@'.ltrim($file_path,'@'));
-			if($filename)
-			{
-				$filename = str_replace(array(';','"'), '', $filename);
-				$post['archive'] .= ';filename='.$filename;
-			}
 			return $this->request('api/client/broadcast/archive', 'POST', $params, $post);
 		}
 	}
