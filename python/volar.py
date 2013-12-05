@@ -70,6 +70,13 @@ class Volar(object):
 				of a single broadcast
 			'title' : title of broadcast.  useful for searches, as this
 				accepts incomplete titles and returns all matches.
+			'template_data' : dict.  search broadcast template data.  should
+				be in the form:
+					{
+						'field title' : 'field value',
+						'field title' : 'field value',
+						....
+					}
 			'autoplay' : true or false.  defaults to false.  used in embed
 				code to prevent player from immediately playing
 			'embed_width' : width (in pixels) that embed should be.  defaults
@@ -249,24 +256,21 @@ class Volar(object):
 				post = {'files' : { 'api_poster': open(file_path, 'rb')}}
 			return self.request(route = 'api/client/broadcast/poster', method = 'POST', params = params, post_body = post)
 
-	def broadcast_archive(self, params = {}, file_path = '', filename = ''):
+	def broadcast_archive(self, params = {}, file_path = ''):
 		"""
 		archives a broadcast.
 
 		@params
 			dict params
 				'id' : id of broadcast
+				'site' : slug of site that broadcast is attached to.
 			string file_path
 				if supplied, this file is uploaded to the server and attached
 				to the broadcast
-			string filename
-				if supplied & file_path is also given, the uploaded file's
-				name is reported to Volar as this filename.  used for easing
-				file upload passthrus.  if not supplied, the filename from
-				file_path is used.
 		@return dict
 			{
 				'success' : True or False depending on success
+				'broadcast' : dict describing broadcast that was modified.
 				if 'success' == True:
 					'fileinfo' : dict containing information about the
 					uploaded file (if there was a file uploaded)
@@ -277,10 +281,7 @@ class Volar(object):
 		if file_path == '':
 			return self.request(route = 'api/client/broadcast/archive', method = 'GET', params = params)
 		else:
-			if filename != '':
-				post = {'files' : { 'archive': (filename, open(file_path, 'rb'))}}
-			else:
-				post = {'files' : { 'archive': open(file_path, 'rb')}}
+			post = {'files' : { 'archive': open(file_path, 'rb')}}
 			return self.request(route = 'api/client/broadcast/archive', method = 'POST', params = params, post_body = post)
 
 	def sections(self, params = {}):
@@ -441,9 +442,18 @@ class Volar(object):
 	def request(self, route, method = '', params = {}, post_body = None):
 		if method == '':
 			method = 'GET'
-		params['api_key'] = self.api_key
-		signature = self.build_signature(route, method, params, post_body)
-		params['signature'] = signature
+
+		params_transformed = {}
+		for key, value in sorted(params.iteritems()):
+			if isinstance(value, dict):
+				for v_key, v_value in sorted(value.iteritems()):
+					params_transformed[ key + '[' + self.convert_val_to_str(v_key) + ']' ] = v_value
+			else:
+				params_transformed[key] = value
+
+		params_transformed['api_key'] = self.api_key
+		signature = self.build_signature(route, method, params_transformed, post_body)
+		params_transformed['signature'] = signature
 
 		url = '/' + route.strip('/')
 
@@ -454,7 +464,7 @@ class Volar(object):
 
 		try:
 			if method == 'GET':
-				r = requests.get(url, params = params)
+				r = requests.get(url, params = params_transformed)
 			else:
 				data = {}
 				files = None
@@ -472,7 +482,7 @@ class Volar(object):
 				if data == {}:	#no data
 					data = None
 
-				r = requests.post(url, params = params, data = data, files = files)
+				r = requests.post(url, params = params_transformed, data = data, files = files)
 			return json.loads(r.text)
 		except Exception as e:
 			self.error = "Request failed with following error: " + e.message
