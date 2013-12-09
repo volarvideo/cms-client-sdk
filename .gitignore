@@ -2,3 +2,4 @@
 phpunit.phar
 python/*.pyc
 php/test_config.php
+check/*
