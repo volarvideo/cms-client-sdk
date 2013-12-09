@@ -34,6 +34,9 @@ if(isset($_POST['action']))
 			case 'playlist_create':
 			case 'playlist_update':
 			case 'playlist_delete':
+			case 'template_create':
+			case 'template_update':
+			case 'template_delete':
 				$res = $v->{$list_of}($_POST['post_params']);
 			break;
 			case 'broadcast_archive':
@@ -90,6 +93,12 @@ if(isset($_POST['action']))
 			<option<?php echo $list_of == 'playlist_create' ? ' selected' : ''; ?> value="playlist_create">Create Playlist</option>
 			<option<?php echo $list_of == 'playlist_update' ? ' selected' : ''; ?> value="playlist_update">Update Playlist</option>
 			<option<?php echo $list_of == 'playlist_delete' ? ' selected' : ''; ?> value="playlist_delete">Delete Playlist</option>
+		</option>
+		<optgroup label="Templates">
+			<option<?php echo $list_of == 'templates' ? ' selected' : ''; ?> value="templates">List of Templates</option>
+			<option<?php echo $list_of == 'template_create' ? ' selected' : ''; ?> value="template_create">Create Template</option>
+			<option<?php echo $list_of == 'template_update' ? ' selected' : ''; ?> value="template_update">Update Template</option>
+			<option<?php echo $list_of == 'template_delete' ? ' selected' : ''; ?> value="template_delete">Delete Template</option>
 		</option>
 	</select>
 	Endpoint:&nbsp;&nbsp;&nbsp;<input type="text" name="endpoint" value="<?php echo htmlspecialchars(stripslashes($endpoint)); ?>" style="width:300px;"><br /><br />

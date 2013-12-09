@@ -191,6 +191,111 @@ class Volar {
 	}
 
 	/**
+	 *	gets list of meta-data templates
+	 *	@param array $params associative array
+	 *			recognized parameters in array:
+	 *				- required -
+	 *				'site'
+	 *				- optional -
+	 *				'page'				current page of listings.  pages begin at '1'
+	 *				'per_page'			number of broadcasts to display per page
+	 *				'broadcast_id'		id of broadcast you wish to limit list to.
+	 *				'section_id'		id of section you wish to limit list to.
+	 *				'id'				id of template - useful if you only want to get details of a single template
+	 *				'title'				title of template.  useful for searches, as this accepts incomplete titles and returns all matches.
+	 *				'sort_by'			data field to use to sort.  allowed fields are id, title, description, date_modified. defaults to title
+	 *				'sort_dir'			direction of sort.  allowed values are 'asc' (ascending) and 'desc' (descending). defaults to asc
+	 *	@return false on failure, array on success.  if failed, $volar->getError() can be used to get last error string
+	 */
+	public function templates($params = array())
+	{
+		if(!isset($params['site']))
+		{
+			$this->error = '"site" parameter is required';
+			return false;
+		}
+		return $this->request('api/client/template', 'GET', $params);
+	}
+
+	/**
+	 *	creates a new meta-data template
+	 *	@param mixed $params associative array or json string
+	 *		recognized parameters:
+	 *			- required -
+	 *				'site'
+	 *				'title'				title of the broadcast
+	 *				'data'				array of data fields assigned to template.  should be in format:
+	 *										array(
+	 *											array(
+	 *												"title" : (string) "field title",
+	 *												"type" : (string) "type of field",
+	 *												"options" : array(...)	//only include if type supports
+	 *											),
+	 *											...
+	 *										)
+	 *									supported types are:
+	 * 										'single-line' - single line of text
+	 *										'multi-line' - multiple-lines of text, option 'rows' (not required) is number of lines html should display as.  ex: "options": array('rows' => 4)
+	 *										'checkbox' - togglable field.  value will be the title of the field.  no options.
+	 *										'checkbox-list' - list of togglable fields.  values should be included in 'options' array.  ex: "options" : array("option 1", "option 2", ...)
+	 *										'radio' - list of selectable fields, although only 1 can be selected at at time.  values should be included in 'options' array.  ex: "options" : array("option 1", "option 2", ...)
+	 *										'dropdown' - same as radio, but displayed as a dropdown.  values should be included in 'options' array.  ex: "options" : array("option 1", "option 2", ...)
+	 *										'country' - dropdown containing country names.  if you wish to specify default value, include "default_select".  this should not be passed as an option, but as a seperate value attached to the field, and accepts 2-character country abbreviation.
+	 *										'state' - dropdown containing united states state names.  if you wish to specify default value, include "default_select".  this should not be passed as an option, but as a seperate value attached to the field, and accepts 2-character state abbreviation.
+	 *			- optional -
+	 *				'description'		text used to describe the template.
+	 *				'section_id'		id of section to assign broadcast to. will default to 'General'.
+	 */
+	public function template_create($params = '')
+	{
+		if(is_array($params) && count($params) > 0)
+		{
+			$params = json_encode($params);
+		}
+		return $this->request('api/client/template/create', 'POST', array(), $params);
+	}
+
+	/**
+	 *	update an existing broadcast meta-data template
+	 *	@param mixed $params associative array or json string
+	 *		recognized parameters:
+	 *			- required -
+	 *				'site'				slug of site to assign broadcast to. note that if the api user does not have permission to create broadcasts on the given site, an error will be produced.
+	 *				'id'				id of broadcast that you're updating
+	 *			- optional -
+	 *				'title'				title of the broadcast
+	 *				'data'				array of data fields assigned to template.  see template_create() for format
+	 *				'description'		text for the description of the template.
+	 *				'section_id'		id of section to assign broadcast to.
+	 */
+	public function template_update($params = '')
+	{
+		if(is_array($params) && count($params) > 0)
+		{
+			$params = json_encode($params);
+		}
+		return $this->request('api/client/template/update', 'POST', array(), $params);
+	}
+
+
+	/**
+	 *	delete an existing broadcast meta-data template.  note that this does not affect template data attached to broadcasts, only the template.
+	 *	@param mixed $params associative array or json string
+	 *		recognized parameters:
+	 *			- required -
+	 *				'site'				slug of site to assign broadcast to. note that if the api user does not have permission to create broadcasts on the given site, an error will be produced.
+	 *				'id'				id of broadcast that you're updating
+	 */
+	public function template_delete($params = '')
+	{
+		if(is_array($params) && count($params) > 0)
+		{
+			$params = json_encode($params);
+		}
+		return $this->request('api/client/template/delete', 'POST', array(), $params);
+	}
+
+	/**
 	 *	gets list of sections
 	 *	@param array $params associative array
 	 *			recognized parameters in array:
