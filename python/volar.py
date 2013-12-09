@@ -284,6 +284,152 @@ class Volar(object):
 			post = {'files' : { 'archive': open(file_path, 'rb')}}
 			return self.request(route = 'api/client/broadcast/archive', method = 'POST', params = params, post_body = post)
 
+	def templates(self, params = {}):
+		"""
+		gets list of meta-data templates
+
+		@param dict params
+			- required -
+			'site' : slug of site to filter to.  note that 'sites' is not supported
+			- optional -
+			'page' : current page of listings.  pages begin at '1'
+			'per_page' : number of broadcasts to display per page
+			'broadcast_id' : id of broadcast you wish to limit list to.
+			'section_id' : id of section you wish to limit list to.
+			'id' : id of template - useful if you only want to get details
+				of a single template
+			'title' : title of template.  useful for searches, as this accepts
+				incomplete titles and returns all matches.
+			'sort_by' : data field to use to sort.  allowed fields are id, title,
+				description, date_modified. defaults to title
+			'sort_dir' : direction of sort.  allowed values are 'asc' (ascending) and
+				'desc' (descending). defaults to asc
+		@return false on failure, dict on success.  if failed, Volar.error can
+			be used to get last error string
+		"""
+
+		if(('site' not in params)):
+			self.error = '"site" parameter is required'
+			return False
+
+		return self.request(route = 'api/client/template', params = params)
+
+	def template_create(self, params = {}):
+		"""
+		create a new meta-data template
+
+		@param dict params
+			- required -
+			'site' : slug of site to filter to.  note that 'sites' is not supported
+			'title' : title of the broadcast
+			'data' : list of data fields (dictionaries) assigned to template.
+				should be in format:
+					[
+						{
+							"title" : (string) "field title",
+							"type" : (string) "type of field",
+							"options" : {...} or [...]	//only include if type supports
+						},
+						...
+					]
+				supported types are:
+					'single-line' - single line of text
+					'multi-line' - multiple-lines of text, option 'rows' (not
+						required) is number of lines html should display as.
+						ex: "options": {'rows': 4}
+					'checkbox' - togglable field.  value will be the title of
+						the field.  no options.
+					'checkbox-list' - list of togglable fields.  values should
+						be included in 'options' list.
+						ex: "options" : ["option 1", "option 2", ...]
+					'radio' - list of selectable fields, although only 1 can be
+						selected at at time.  values should be included in
+						'options' list.
+						ex: "options" : ["option 1", "option 2", ...]
+					'dropdown' - same as radio, but displayed as a dropdown.
+						values should be included in 'options' array.
+						ex: "options" : ["option 1", "option 2", ...]
+					'country' - dropdown containing country names.  if you wish
+						to specify default value, include "default_select".  this
+						should not be passed as an option, but as a seperate value
+						attached to the field, and accepts 2-character country
+						abbreviation.
+					'state' - dropdown containing united states state names.  if
+						you wish to specify default value, include "default_select".
+						this should not be passed as an option, but as a seperate
+						value attached to the field, and accepts 2-character state
+						abbreviation.
+			- optional -
+			'description' : text used to describe the template.
+			'section_id' : id of section to assign broadcast to. will default to 'General'.
+		@return dict
+			{
+				'success' : True or False depending on success
+				...
+				if 'success' == True:
+					'template' : dict containing template information,
+						including id of new template
+				else:
+					'errors' : list of errors to give reason(s) for failure
+			}
+		"""
+		site = params.pop('site', None)
+		if site == None:
+			self.error = 'site is required'
+			return False
+
+		params = json.dumps(params)
+		return self.request(route = 'api/client/template/create', method = 'POST', params = { 'site' : site }, post_body = params)
+
+	def template_update(self, params = {}):
+		"""
+		create a new meta-data template
+
+		@param dict params
+			- required -
+			'site' : slug of site to filter to.  note that 'sites' is not supported
+			'id' : numeric id of template that you are intending to update.
+			- optional -
+			'title' : title of the broadcast
+			'data' : list of data fields assigned to template.  see template_create() for format
+			'description' : text used to describe the template.
+			'section_id' : id of section to assign broadcast to. will default to 'General'.
+		@return dict
+			{
+				'success' : True or False depending on success
+				...
+				if 'success' == True:
+					'template' : dict containing template information,
+						including id of new template
+				else:
+					'errors' : list of errors to give reason(s) for failure
+			}
+			Note that if you do not have direct access to update a template (it may be domain or
+				client level), a new template will be created and returned to you that does have
+				the permissions set for you to modify.  keep this in mind when updating templates.
+		"""
+		site = params.pop('site', None)
+		if site == None:
+			self.error = 'site is required'
+			return False
+
+		params = json.dumps(params)
+		return self.request(route = 'api/client/template/update', method = 'POST', params = { 'site' : site }, post_body = params)
+
+	def template_delete(self, params = {}):
+		"""
+		delete a meta-data template
+
+		the only parameter (aside from 'site') that this function takes is 'id'
+		"""
+		site = params.pop('site', None)
+		if site == None:
+			self.error = 'site is required'
+			return False
+		params = json.dumps(params)
+		return self.request(route = 'api/client/template/delete', method = 'POST', params = { 'site' : site }, post_body = params)
+
+
 	def sections(self, params = {}):
 		"""
 		gets list of sections
