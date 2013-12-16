@@ -83,7 +83,7 @@ class TestEditBroadcast(unittest.TestCase):
 		self.assertTrue(response['success'], 'Failed to create broadcast')
 		broadcast_details = response['broadcast']
 
-		response = self.v.broadcast_poster({'site': 'volar', 'id': broadcast_details['id']}, "/home/volar/Desktop/cms-client-sdk/python/test/pulp_fiction_lrg.jpg", "pulpfiction.jpg")
+		response = self.v.broadcast_poster({'site': 'volar', 'id': broadcast_details['id']}, "/home/volar/Desktop/cms-client-sdk/python/test/wallpaper-volar.jpg", "pulpfiction.jpg")
 		self.assertTrue(response['success'], 'Failed to upload image')
 
 		response = self.v.broadcast_delete({'site': 'volar', 'id': broadcast_details['id']})

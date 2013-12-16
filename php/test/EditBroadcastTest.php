@@ -18,7 +18,7 @@ class EditBroadcastTest extends PHPUnit_Framework_TestCase {
 	//change to false to save all generated broadcasts after testing
 	var $DELETE_BROADCASTS = true;
 	//File path for uploaded image
-	var $POSTER_PATH = "/home/volar/Desktop/cms-client-sdk/php/test/pulp_fiction_lrg.jpg";
+	var $POSTER_PATH = "/home/volar/Desktop/cms-client-sdk/php/test/wallpaper-volar.jpg";
 
 	function testBroadcastCreateAndDelete()
 	{
