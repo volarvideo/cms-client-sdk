@@ -45,7 +45,6 @@ class Volar
 		end
 		params.delete('site')
 		params = JSON.generate(params)
-		puts params
 		results = self.request(route = 'api/client/broadcast/create', method = 'POST', parameters = {'site' => site}, post_body = params)
 		return results
 	end 
@@ -277,7 +276,7 @@ class Volar
 
 		begin
 			if method == 'GET'
-				request = RestClient.get(url, {:params => transformed_params})
+				response = RestClient.get(url, {:params => transformed_params}){| response, request, result | response }
 			else
 				###################
 				#####UNTESTED######
@@ -304,9 +303,10 @@ class Volar
 =end 
 				#puts post_body
 				#puts transformed_params
-				request = RestClient.post(url, post_body, {:nested => transformed_params})
+				response = RestClient.post(url, post_body, {:params => transformed_params}){| response, request, result | response }
 			end
-			return JSON.parse(request)
+
+			return JSON.parse(response)
 		rescue Exception => exc
 			puts exc.message 
 			puts exc.backtrace.inspect
@@ -332,7 +332,6 @@ class Volar
 		if post_body != nil and post_body.is_a?(String)
 			signature += post_body
 		end 
-	
 		
 		signature=signature.force_encoding('us-ascii')
 		sha256 = Digest::SHA2.new(256)
@@ -358,8 +357,8 @@ class Volar
 
 end
 
-v=Volar.new(api_key='mZS1Q6EBuxesHCOThaVkIsJQoKevDdjD', secret='uPFC<fal^~?JM%v|3KT<f#SN$>K]e6C/', base_url='staging.platypusgranola.com')
-result= v.broadcast_create(parameters={'site'=>'volar', 'title'=>'tjbroadcast', 'contact_name'=>'trjones', 'contact_phone'=>'555-555-5555', 'contact_sms'=>'555-555-5555', 'contact_email'=>'ajsdfkl@ajsdfkl.com'})
+# v=Volar.new(api_key='mZS1Q6EBuxesHCOThaVkIsJQoKevDdjD', secret='uPFC<fal^~?JM%v|3KT<f#SN$>K]e6C/', base_url='staging.platypusgranola.com')
+# result= v.broadcast_create(parameters={'site'=>'volar', 'title'=>'tjbroadcast', 'contact_name'=>'trjones', 'contact_phone'=>'555-555-5555', 'contact_sms'=>'555-555-5555', 'contact_email'=>'ajsdfkl@ajsdfkl.com'})
 #puts result
 #puts '\n\n\n'+v.error
 =begin
