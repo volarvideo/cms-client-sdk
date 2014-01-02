@@ -690,9 +690,9 @@ class Volar
 		url = '/' + route.chomp('/')
 		
 		if @secure
-			url = 'https://' + @base_url + url 
+			url = 'https://' + String(@base_url) + url 
 		else 
-			url = 'http://' + @base_url + url
+			url = 'http://' + String(@base_url) + url
 		end 
 
 		begin

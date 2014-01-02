@@ -3,3 +3,5 @@ phpunit.phar
 python/*.pyc
 php/test_config.php
 check/*
+ruby/test/test.mp4
+ruby/test/ruby-mini-logo.png
