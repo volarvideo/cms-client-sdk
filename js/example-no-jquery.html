@@ -46,13 +46,66 @@
 
 	}
 
+	function listTemplates(data)
+	{
+		if(!data.templates) return;
+		var container = document.getElementById('template-form');
+		for(var i in data.templates)
+		{
+			if(data.templates[i].num_fields > 0)
+			{
+				container.innerHTML += '<div class="template-form" id="t'+data.templates[i].id+'"></div>';
+				templateContainer = document.getElementById('t'+data.templates[i].id);
+				templateContainer.innerHTML += '<h4>' + data.templates[i].title + '</h4>';
+				for(var j in data.templates[i].data)
+				{
+					addTemplateField(templateContainer, data.templates[i].data[j]);
+				}
+			}
+		}
+	}
+	function addTemplateField(container, fieldData)
+	{
+		var html = '<div class="template-field">';
+		switch(fieldData.type)
+		{
+			case 'single-line':
+			case 'multi-line':
+				html += fieldData.title + ' <input name="template_data[' + fieldData.title + ']" type="text" />';
+			break;
+			case 'dropdown':
+				html += fieldData.title + ' <select name="template_data[' + fieldData.title + ']">';
+				for(var i in fieldData.options)
+				{
+					html += '<option value="' +fieldData.options[i]+ '">' + fieldData.options[i] + '</option>';
+				}
+				html += '</select>';
+			break;
+			case 'radio':
+				html += fieldData.title + '';
+				for(var i in fieldData.options)
+				{
+					html += '<input type="radio" name="template_data[' + fieldData.title + ']" value="' +fieldData.options[i]+ '">' + fieldData.options[i];
+				}
+			break;
+			default:
+				console.log(fieldData);
+			break;
+
+		}
+		html += '</div>';
+		container.innerHTML += html;
+	}
+
 	window.onload = function(){
 		Volar.broadcasts({'callback' : listBroadcasts, 'site' : 'volar'});
+		Volar.templates({'callback' : listTemplates, 'site' : 'volar'});
 	}
 </script>
 </head>
 <body>
 <div id="embed"></div>
+<div id="template-form"></div>
 <div id="responseElement"></div>
 </body>
 </html>

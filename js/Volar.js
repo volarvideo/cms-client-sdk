@@ -53,6 +53,48 @@ var Volar = {
 	},
 
 	/**
+	 *	gets list of broadcast data templates
+	 *	@param object opts
+	 *			recognized parameters in object:
+	 *				- required -
+	 *				'site' OR 'sites'		slug of site to filter to.
+	 *											if passing 'sites', users can include a comma-delimited list of sites.
+	 *											results will reflect all templates in the listed sites.
+	 *				'callback'				javascript function name that should be executed once the jsonp call is completed.
+	 *											Actual function pointers are supported.
+	 *				- optional -
+	 *				'page'					current page of listings.  pages begin at '1'
+	 *				'per_page'				number of templates to display per page
+	 *				'section_id'			id of section you wish to limit list to
+	 *				'broadcast_id'			id of broadcast you wish to limit list to
+	 *				'id'					id of broadcast - useful if you only want to get details of a single broadcast
+	 *				'title'					title of broadcast.  useful for searches, as this accepts incomplete titles and returns all matches.
+	 *				'date_modified_before' 	return templates that were modified before specified date.  can be a date string or integer timestamp.  note that date strings should be in standard formats.
+	 *				'date_modified_after' 	return templates that were modified after specified date.  can be a date string or integer timestamp.  note that date strings should be in standard formats.
+	 *										note - if both before and after are included, templates between the supplied dates are returned.
+	 *				'sort_by'				data field to use to sort.  allowed fields are date_modified, id, title, description
+	 *				'sort_dir'				direction of sort.  allowed values are 'asc' (ascending) and 'desc' (descending)
+	 *	Because the function operates on jsonp, the function supplied in the 'callback' argument is called with the returned data.
+	 *	The function should be able to handle an object that is structured with the data as listed on 
+	 *		https://github.com/volarvideo/cms-client-sdk/wiki/Creating-API-Connections-without-the-SDK-code#wiki-listing-meta-data-templates
+	 */
+
+	'templates' : function(opts) {
+		if(!('callback' in opts))
+		{
+			this.log('"callback" argument is required.')
+			return;
+		}
+		if(!('site' in opts) && !('sites' in opts))
+		{
+			this.log('"site" or "sites" arguments are required.')
+			return;
+		}
+		var api_url = ('https:' == document.location.protocol ? 'https://' : 'http://') + this.base_url + '/api/client/template';
+		this.execute(api_url, opts);
+	},
+
+	/**
 	 *	gets list of sections
 	 *	@param array $params associative array
 	 *			recognized parameters in array:
