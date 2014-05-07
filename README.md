@@ -1,4 +1,4 @@
-DEPRECIATION NOTICE
+DEPRECATION NOTICE
 ===================
 We have made changes to how we structure our repositories.  We are going to keep this repository around so that the wiki is still accessible (as that is extremely important to have), but the PHP, Python, and Ruby SDKs have been pulled out into their own repositories.
   + [PHP](https://github.com/volarvideo/cms-client-sdk-php)
